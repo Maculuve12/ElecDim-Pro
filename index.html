@@ -1,0 +1,1814 @@
+<!DOCTYPE html>
+<html lang="pt" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>ElecDim Pro — Dimensionador de Circuitos Elétricos</title>
+
+<!-- SEO -->
+<meta name="description" content="ElecDim Pro é um aplicativo gratuito para dimensionamento de circuitos elétricos. Calcule disjuntores, cabos, correntes e gere relatórios PDF profissionais. Iluminação, tomadas, resistivos e motores.">
+<meta name="keywords" content="dimensionador de circuitos elétricos, calcular disjuntor, calcular cabo elétrico, dimensionamento elétrico, ElecDim Pro, engenharia elétrica, projeto elétrico, corrente elétrica, instalação elétrica, Moçambique">
+<meta name="author" content="Odêncio Hermínio Maculuve">
+<meta name="robots" content="index, follow">
+<meta name="language" content="Portuguese">
+<link rel="canonical" href="https://maculuve12.github.io/ElecDim-Pro/dimensionador.html">
+
+<!-- Open Graph (WhatsApp, Facebook) -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="ElecDim Pro — Dimensionador de Circuitos Elétricos">
+<meta property="og:description" content="Calcule disjuntores, cabos e correntes elétricos gratuitamente. Gere relatórios PDF profissionais. Funciona offline.">
+<meta property="og:url" content="https://maculuve12.github.io/ElecDim-Pro/dimensionador.html">
+<meta property="og:image" content="https://maculuve12.github.io/ElecDim-Pro/icon-512.png">
+<meta property="og:locale" content="pt_MZ">
+<meta property="og:site_name" content="ElecDim Pro">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="ElecDim Pro — Dimensionador de Circuitos Elétricos">
+<meta name="twitter:description" content="Calcule disjuntores, cabos e correntes elétricos gratuitamente. Funciona offline.">
+<meta name="twitter:image" content="https://maculuve12.github.io/ElecDim-Pro/icon-512.png">
+
+<!-- PWA -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#F59E0B">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ElecDim Pro">
+<link rel="apple-touch-icon" href="icon-192.png">
+
+<!-- Schema.org (Google entende melhor) -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "ElecDim Pro",
+  "description": "Aplicativo gratuito para dimensionamento de circuitos elétricos. Calcule disjuntores, cabos e gere relatórios PDF.",
+  "url": "https://maculuve12.github.io/ElecDim-Pro/dimensionador.html",
+  "applicationCategory": "EngineeringApplication",
+  "operatingSystem": "Android, iOS, Windows, macOS",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "Odêncio Hermínio Maculuve",
+    "email": "odencmaculuve@gmail.com"
+  }
+}
+</script>
+<style>
+/* ── FONTES SISTEMA (offline total) ── */
+:root {
+  --fd: -apple-system, 'Segoe UI', Arial, sans-serif;
+  --fb: -apple-system, 'Segoe UI', Arial, sans-serif;
+  --fm: 'Courier New', Courier, monospace;
+}
+
+/* ── TEMA ESCURO ── */
+[data-theme="dark"] {
+  --bg:    #070B14; --panel: #0D1220; --card:  #111827;
+  --input: #0A0E1A; --border:#1E2A3A;
+  --amber: #F59E0B; --adim:  #92600A; --aglow: rgba(245,158,11,0.15);
+  --blue:  #3B82F6; --bdim:  rgba(59,130,246,0.12);
+  --green: #10B981; --red:   #EF4444;
+  --hi:    #F1F5F9; --mid:   #94A3B8; --lo:    #475569;
+  --shadow: rgba(0,0,0,0.4);
+}
+/* ── TEMA CLARO ── */
+[data-theme="light"] {
+  --bg:    #F0F4F8; --panel: #FFFFFF; --card:  #F8FAFC;
+  --input: #EEF2F7; --border:#CBD5E1;
+  --amber: #D97706; --adim:  #92600A; --aglow: rgba(217,119,6,0.12);
+  --blue:  #2563EB; --bdim:  rgba(37,99,235,0.1);
+  --green: #059669; --red:   #DC2626;
+  --hi:    #0F172A; --mid:   #475569; --lo:    #94A3B8;
+  --shadow: rgba(0,0,0,0.1);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg); color: var(--hi);
+  font-family: var(--fb); font-size: 14px; line-height: 1.5;
+  min-height: 100vh; overflow-x: hidden;
+  transition: background 0.3s, color 0.3s;
+}
+[data-theme="dark"] body::before {
+  content: ''; position: fixed; inset: 0; z-index: 0;
+  background-image: linear-gradient(rgba(59,130,246,0.03) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(59,130,246,0.03) 1px,transparent 1px);
+  background-size: 32px 32px; pointer-events: none;
+}
+
+/* ── HEADER ── */
+header {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--panel); border-bottom: 1px solid var(--border);
+  padding: 0 16px; box-shadow: 0 2px 8px var(--shadow);
+}
+.header-inner { max-width: 960px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 52px; }
+.logo { display: flex; align-items: center; gap: 10px; }
+.logo-icon { width: 30px; height: 30px; background: var(--amber); border-radius: 4px; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 12px var(--aglow); }
+.logo-text { font-size: 18px; font-weight: 700; letter-spacing: 0.5px; }
+.logo-text span { color: var(--amber); }
+.header-right { display: flex; align-items: center; gap: 8px; }
+.theme-btn {
+  width: 34px; height: 34px; border-radius: 50%;
+  background: var(--input); border: 1px solid var(--border);
+  color: var(--mid); cursor: pointer; font-size: 16px;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s;
+}
+.theme-btn:hover { border-color: var(--amber); color: var(--amber); }
+
+/* ── APP ── */
+.app { position: relative; z-index: 1; max-width: 960px; margin: 0 auto; padding: 14px; display: flex; flex-direction: column; gap: 14px; }
+
+/* ── CARD ── */
+.card { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; box-shadow: 0 2px 8px var(--shadow); }
+.card-header { padding: 12px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px; background: var(--card); }
+.card-header h2 { font-size: 15px; font-weight: 600; }
+.card-header-right { margin-left: auto; display: flex; gap: 6px; }
+
+/* ── NOTAS PROJETO ── */
+.project-fields { padding: 12px 16px; border-bottom: 1px solid var(--border); display: flex; flex-direction: column; gap: 8px; }
+.project-field-row { display: flex; gap: 8px; }
+.project-field { flex: 1; display: flex; flex-direction: column; gap: 3px; }
+.project-field label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.8px; color: var(--lo); font-weight: 500; }
+.project-field input, .project-field textarea {
+  padding: 7px 10px; background: var(--input);
+  border: 1px solid var(--border); border-radius: 4px;
+  color: var(--hi); font-family: var(--fb); font-size: 12px;
+  outline: none; transition: border-color 0.2s; resize: none;
+}
+.project-field input:focus, .project-field textarea:focus { border-color: var(--amber); }
+.project-field input::placeholder, .project-field textarea::placeholder { color: var(--lo); }
+
+/* ── TENSÃO ── */
+.tensao-row { padding: 10px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px; }
+.tensao-label { font-size: 11px; font-weight: 600; letter-spacing: 0.8px; color: var(--mid); text-transform: uppercase; white-space: nowrap; }
+.tensao-btns { display: flex; gap: 5px; flex: 1; }
+.tensao-btn { flex: 1; padding: 7px 2px; background: var(--input); border: 1px solid var(--border); border-radius: 4px; color: var(--mid); font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+.tensao-btn:hover { border-color: var(--amber); color: var(--amber); }
+.tensao-btn.active { background: var(--aglow); border-color: var(--amber); color: var(--amber); }
+.tensao-custom { width: 65px; padding: 7px 6px; background: var(--input); border: 1px solid var(--border); border-radius: 4px; color: var(--hi); font-family: var(--fm); font-size: 12px; text-align: center; outline: none; transition: border-color 0.2s; }
+.tensao-custom:focus { border-color: var(--amber); }
+
+/* ── TABS ── */
+.tabs-nav { display: flex; border-bottom: 1px solid var(--border); background: var(--card); overflow-x: auto; }
+.tab-btn { flex: 1; min-width: 60px; padding: 9px 4px; background: transparent; border: none; border-bottom: 2px solid transparent; color: var(--lo); font-size: 10px; font-weight: 500; cursor: pointer; transition: all 0.2s; display: flex; flex-direction: column; align-items: center; gap: 3px; }
+.tab-btn svg { opacity: 0.4; width: 14px; height: 14px; }
+.tab-btn.active { color: var(--amber); border-bottom-color: var(--amber); }
+.tab-btn.active svg { opacity: 1; }
+.tab-count { font-family: var(--fm); font-size: 9px; background: var(--border); padding: 1px 4px; border-radius: 8px; }
+.tab-btn.active .tab-count { background: var(--adim); color: var(--amber); }
+.tab-content { display: none; padding: 12px 16px; }
+.tab-content.active { display: block; }
+
+/* ── ITEMS ── */
+.item-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 10px; }
+@keyframes slideDown { from{opacity:0;transform:translateY(-5px);}to{opacity:1;transform:translateY(0);} }
+.item-row { display: flex; align-items: center; gap: 6px; animation: slideDown 0.2s ease; }
+.item-label { font-family: var(--fm); font-size: 10px; color: var(--mid); flex-shrink: 0; min-width: 68px; max-width: 68px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.item-input { flex: 1; min-width: 0; padding: 7px 8px; background: var(--input); border: 1px solid var(--border); border-radius: 4px; color: var(--hi); font-family: var(--fm); font-size: 12px; outline: none; transition: border-color 0.2s; }
+.item-input:focus { border-color: var(--amber); }
+.item-input::placeholder { color: var(--lo); }
+.item-unit { font-family: var(--fm); font-size: 10px; color: var(--lo); flex-shrink: 0; }
+.item-actions { display: flex; gap: 4px; flex-shrink: 0; }
+.btn-icon { width: 28px; height: 28px; flex-shrink: 0; background: transparent; border: 1px solid var(--border); border-radius: 4px; color: var(--lo); cursor: pointer; font-size: 14px; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+.btn-icon.dup:hover { border-color: var(--blue); color: var(--blue); background: var(--bdim); }
+.btn-icon.del:hover { border-color: var(--red); color: var(--red); background: rgba(239,68,68,0.1); }
+
+.btn-add { width: 100%; padding: 8px; background: transparent; border: 1px dashed var(--border); border-radius: 4px; color: var(--lo); font-size: 12px; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 5px; }
+.btn-add:hover { border-color: var(--amber); color: var(--amber); background: var(--aglow); }
+.tab-note { margin-top: 8px; padding: 7px 10px; background: var(--bdim); border-left: 3px solid var(--blue); border-radius: 0 4px 4px 0; font-size: 10px; color: var(--mid); }
+
+/* ── TABELA REFERÊNCIA ── */
+.ref-search { width: 100%; padding: 8px 10px; background: var(--input); border: 1px solid var(--border); border-radius: 4px; color: var(--hi); font-size: 12px; outline: none; margin-bottom: 10px; transition: border-color 0.2s; }
+.ref-search:focus { border-color: var(--amber); }
+.ref-table { width: 100%; border-collapse: collapse; }
+.ref-table th { padding: 7px 8px; text-align: left; font-size: 9px; text-transform: uppercase; letter-spacing: 0.8px; color: var(--lo); border-bottom: 1px solid var(--border); }
+.ref-table td { padding: 7px 8px; border-bottom: 1px solid rgba(30,42,58,0.4); font-size: 11px; }
+.ref-table tr:last-child td { border-bottom: none; }
+.ref-table td:first-child { color: var(--hi); }
+.ref-table td:nth-child(2) { font-family: var(--fm); color: var(--amber); text-align: right; }
+.ref-table td:nth-child(3) { color: var(--mid); font-size: 10px; }
+.btn-usar { padding: 3px 8px; background: transparent; border: 1px solid var(--border); border-radius: 3px; color: var(--mid); font-size: 10px; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
+.btn-usar:hover { border-color: var(--amber); color: var(--amber); background: var(--aglow); }
+.ref-category { padding: 5px 8px; font-size: 9px; text-transform: uppercase; letter-spacing: 1px; color: var(--amber); background: var(--aglow); font-weight: 600; }
+
+/* ── BTN DIMENSIONAR ── */
+.btn-dimensionar { display: block; width: calc(100% - 32px); margin: 0 16px 14px; padding: 13px; background: var(--amber); border: none; border-radius: 8px; color: #0A0E1A; font-size: 15px; font-weight: 700; letter-spacing: 2px; cursor: pointer; transition: all 0.25s; text-transform: uppercase; position: relative; overflow: hidden; }
+.btn-dimensionar::after { content: ''; position: absolute; inset: 0; background: linear-gradient(120deg,transparent 30%,rgba(255,255,255,0.2) 50%,transparent 70%); transform: translateX(-100%); transition: transform 0.5s; }
+.btn-dimensionar:hover::after { transform: translateX(100%); }
+.btn-dimensionar:hover { box-shadow: 0 0 20px var(--aglow); }
+.btn-dimensionar.loading { pointer-events: none; opacity: 0.7; }
+
+/* ── HISTÓRICO ── */
+.history-list { display: flex; flex-direction: column; gap: 8px; padding: 12px 16px; }
+.history-empty { padding: 24px; text-align: center; color: var(--lo); font-size: 12px; }
+.history-item { display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; background: var(--card); border: 1px solid var(--border); border-radius: 6px; cursor: pointer; transition: all 0.2s; gap: 8px; }
+.history-item:hover { border-color: var(--amber); }
+.history-info { flex: 1; min-width: 0; }
+.history-name { font-size: 13px; font-weight: 600; color: var(--hi); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.history-meta { font-family: var(--fm); font-size: 10px; color: var(--lo); margin-top: 2px; }
+.history-corrente { font-family: var(--fm); font-size: 16px; font-weight: 700; color: var(--amber); flex-shrink: 0; }
+.history-del { width: 26px; height: 26px; background: transparent; border: 1px solid var(--border); border-radius: 4px; color: var(--lo); cursor: pointer; font-size: 13px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.2s; }
+.history-del:hover { border-color: var(--red); color: var(--red); }
+
+/* ── RESULTS ── */
+.results-col { display: flex; flex-direction: column; gap: 12px; }
+.empty-state { padding: 40px 20px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.empty-icon { width: 48px; height: 48px; background: var(--card); border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid var(--border); }
+.empty-state h3 { font-size: 16px; font-weight: 600; color: var(--mid); }
+.empty-state p { font-size: 11px; color: var(--lo); max-width: 220px; }
+
+/* ── ALERTA ── */
+.alert-box { display: flex; align-items: center; gap: 8px; padding: 10px 14px; border-radius: 6px; font-size: 12px; margin-bottom: 4px; }
+.alert-box.warn { background: rgba(245,158,11,0.12); border: 1px solid var(--amber); color: var(--amber); }
+.alert-box.danger { background: rgba(239,68,68,0.12); border: 1px solid var(--red); color: var(--red); }
+
+/* ── GRÁFICO ── */
+.chart-block { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; animation: fadeUp 0.35s ease both; }
+.chart-header { padding: 11px 16px; border-bottom: 1px solid var(--border); font-size: 13px; font-weight: 600; color: var(--mid); background: var(--card); display: flex; align-items: center; gap: 8px; }
+.chart-body { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.chart-row { display: flex; flex-direction: column; gap: 4px; }
+.chart-row-label { display: flex; justify-content: space-between; align-items: center; }
+.chart-row-name { font-size: 11px; color: var(--mid); }
+.chart-row-val { font-family: var(--fm); font-size: 11px; color: var(--amber); }
+.chart-track { height: 10px; background: var(--input); border-radius: 5px; overflow: hidden; border: 1px solid var(--border); }
+.chart-fill { height: 100%; border-radius: 5px; background: linear-gradient(90deg, var(--adim), var(--amber)); width: 0%; transition: width 1s cubic-bezier(0.16,1,0.3,1); }
+.chart-pct { font-family: var(--fm); font-size: 9px; color: var(--lo); text-align: right; margin-top: 1px; }
+
+/* ── RESULT SECTION ── */
+.result-section { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; animation: fadeUp 0.35s ease both; }
+@keyframes fadeUp { from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);} }
+.result-section-header { padding: 11px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; background: var(--card); }
+.result-section-title { font-size: 13px; font-weight: 600; }
+.result-section-meta { font-family: var(--fm); font-size: 10px; color: var(--lo); }
+.result-cards { padding: 10px; display: flex; flex-direction: column; gap: 8px; }
+
+/* ── CIRCUIT CARD ── */
+.circuit-card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 11px 11px 11px 14px; position: relative; overflow: hidden; transition: border-color 0.2s; }
+.circuit-card::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--amber); }
+.circuit-card.overload { border-color: var(--red); }
+.circuit-card.overload::before { background: var(--red); }
+.circuit-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 9px; }
+.circuit-id { font-family: var(--fm); font-size: 11px; color: var(--amber); }
+.circuit-card.overload .circuit-id { color: var(--red); }
+.circuit-potencia { font-family: var(--fm); font-size: 10px; color: var(--lo); }
+.circuit-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 9px; }
+.circuit-stat { display: flex; flex-direction: column; gap: 2px; }
+.stat-label { font-size: 9px; text-transform: uppercase; letter-spacing: 0.7px; color: var(--lo); font-weight: 500; }
+.stat-value { font-size: 17px; font-weight: 700; color: var(--hi); line-height: 1; }
+.stat-value .su { font-size: 10px; color: var(--mid); font-weight: 400; margin-left: 1px; }
+.stat-value.hi  { color: var(--amber); }
+.stat-value.bl  { color: var(--blue); }
+.stat-value.danger { color: var(--red); }
+
+/* ── CARGAS ── */
+.carga-list { margin-top: 9px; padding-top: 9px; border-top: 1px solid var(--border); }
+.carga-list-label { font-size: 9px; text-transform: uppercase; letter-spacing: 0.7px; color: var(--lo); margin-bottom: 5px; display: flex; align-items: center; gap: 5px; }
+.carga-list-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+.carga-items { display: flex; flex-direction: column; gap: 3px; }
+.carga-item { display: flex; align-items: center; justify-content: space-between; padding: 4px 7px; background: var(--input); border-radius: 3px; border: 1px solid var(--border); }
+.carga-item-nome { font-family: var(--fm); font-size: 10px; color: var(--mid); display: flex; align-items: center; gap: 4px; }
+.carga-item-nome::before { content: '▸'; color: var(--amber); font-size: 8px; }
+.carga-item-pot { font-family: var(--fm); font-size: 10px; color: var(--lo); }
+
+/* ── BARRA ── */
+.ampere-bar-wrap { margin-top: 9px; }
+.ampere-bar-label { display: flex; justify-content: space-between; margin-bottom: 3px; }
+.ampere-bar-label span:first-child { font-size: 9px; color: var(--lo); text-transform: uppercase; letter-spacing: 0.7px; }
+.ampere-bar-label span:last-child { font-family: var(--fm); font-size: 9px; color: var(--amber); }
+.ampere-bar-track { height: 5px; background: var(--input); border-radius: 3px; overflow: hidden; border: 1px solid var(--border); }
+.ampere-bar-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg,var(--adim),var(--amber)); width: 0%; transition: width 1s cubic-bezier(0.16,1,0.3,1); }
+.ampere-bar-fill.danger { background: linear-gradient(90deg,#991B1B,var(--red)); }
+
+/* ── SIMULTANEIDADE ── */
+.simul-block { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; animation: fadeUp 0.35s ease both; }
+.simul-header { padding: 11px 16px; border-bottom: 1px solid var(--border); font-size: 13px; font-weight: 600; color: var(--mid); background: var(--card); display: flex; align-items: center; gap: 8px; }
+.simul-table { width: 100%; border-collapse: collapse; }
+.simul-table th { padding: 7px 12px; text-align: left; font-size: 9px; text-transform: uppercase; letter-spacing: 0.7px; color: var(--lo); border-bottom: 1px solid var(--border); }
+.simul-table td { padding: 8px 12px; border-bottom: 1px solid rgba(30,42,58,0.4); font-family: var(--fm); font-size: 11px; }
+.simul-table tr:last-child td { border-bottom: none; }
+.simul-table td:first-child { color: var(--mid); font-family: var(--fb); font-size: 12px; }
+.simul-table td.num { color: var(--hi); text-align: right; }
+.simul-table td.fat { color: var(--blue); text-align: center; }
+.simul-table td.res { color: var(--amber); text-align: right; font-weight: 600; }
+
+/* ── TOTAL ── */
+.total-block { background: linear-gradient(135deg,rgba(146,96,10,0.15) 0%,var(--panel) 100%); border: 1px solid var(--adim); border-radius: 10px; padding: 18px 16px; position: relative; overflow: hidden; animation: fadeUp 0.35s ease both; }
+.total-label { font-family: var(--fm); font-size: 9px; letter-spacing: 2px; color: var(--adim); text-transform: uppercase; margin-bottom: 4px; }
+.total-val { font-size: 44px; font-weight: 700; color: var(--amber); line-height: 1; }
+.total-val span { font-size: 17px; color: var(--adim); font-weight: 400; }
+.total-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 14px; }
+.total-stat { background: rgba(0,0,0,0.15); border: 1px solid var(--border); border-radius: 4px; padding: 9px 10px; }
+.total-stat-label { font-size: 9px; text-transform: uppercase; letter-spacing: 0.7px; color: var(--lo); margin-bottom: 2px; }
+.total-stat-value { font-size: 17px; font-weight: 700; color: var(--hi); }
+.total-stat-value.am { color: var(--amber); }
+
+/* ── EXPORT ── */
+.export-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.export-btn { flex: 1; min-width: 120px; padding: 10px 12px; display: flex; align-items: center; justify-content: center; gap: 6px; background: transparent; border: 1px solid var(--border); border-radius: 6px; color: var(--mid); font-size: 12px; cursor: pointer; transition: all 0.2s; }
+.export-btn:hover { border-color: var(--blue); color: var(--blue); background: var(--bdim); }
+.export-btn.pdf { border-color: var(--adim); color: var(--amber); }
+.export-btn.pdf:hover { background: var(--aglow); border-color: var(--amber); }
+
+/* ── PULSE / SPINNER ── */
+.pulse-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); display: inline-block; position: relative; }
+.pulse-dot::after { content: ''; position: absolute; inset: -3px; border-radius: 50%; background: var(--green); opacity: 0.3; animation: pr 1.5s ease-out infinite; }
+@keyframes pr { 0%{transform:scale(0.8);opacity:0.4;}100%{transform:scale(2.2);opacity:0;} }
+@keyframes spin { to{transform:rotate(360deg);} }
+.spinner { display:inline-block;width:13px;height:13px;border:2px solid rgba(10,14,26,0.3);border-top-color:#0A0E1A;border-radius:50%;animation:spin 0.7s linear infinite;vertical-align:middle;margin-right:6px; }
+
+/* ── FOOTER ── */
+.app-footer { position: relative; z-index: 1; border-top: 1px solid var(--border); padding: 16px; background: var(--panel); margin-top: 8px; }
+.footer-inner { max-width: 960px; margin: 0 auto; }
+.footer-name { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+.footer-contacts { display: flex; flex-wrap: wrap; gap: 12px; }
+.footer-contact { display: flex; align-items: center; gap: 5px; font-family: var(--fm); font-size: 10px; color: var(--mid); text-decoration: none; transition: color 0.2s; }
+.footer-contact:hover { color: var(--amber); }
+
+/* ── TOAST ── */
+.toast { position: fixed; bottom: 16px; right: 16px; left: 16px; background: var(--card); border: 1px solid var(--green); border-radius: 8px; padding: 10px 16px; font-size: 12px; color: var(--green); font-family: var(--fm); z-index: 1000; transform: translateY(80px); opacity: 0; transition: all 0.3s cubic-bezier(0.16,1,0.3,1); pointer-events: none; text-align: center; }
+.toast.show { transform: translateY(0); opacity: 1; }
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+/* ── PRINT ── */
+@media print {
+  body,[data-theme="dark"],[data-theme="light"] { background:#fff!important; color:#111!important; }
+  body::before,header,.app-footer,.export-row,.toast,.chart-block { display:none!important; }
+  .app { padding:0; }
+  .result-section,.simul-block,.total-block,.circuit-card { background:#fff!important; border:1px solid #ccc!important; break-inside:avoid; }
+  .result-section-header,.simul-header,.card-header { background:#f0f0f0!important; }
+  .stat-value,.circuit-id,.total-val,.total-stat-value,.simul-table td,.simul-table th,.total-label,.ampere-bar-label span,.carga-item-nome,.carga-item-pot,.result-section-title,.result-section-meta { color:#111!important; }
+  .circuit-card::before,.ampere-bar-fill,.chart-fill { background:#D97706!important; }
+  .total-block { background:#fff8e6!important; border-color:#D97706!important; }
+  .pulse-dot,.pulse-dot::after { display:none; }
+  .pdf-header { display:block!important; }
+  .pdf-footer-print { display:block!important; }
+}
+.pdf-header { display:none; text-align:center; margin-bottom:14px; padding-bottom:10px; border-bottom:2px solid #D97706; }
+.pdf-header h1 { font-size:17px; color:#0A0E1A; font-weight:700; }
+.pdf-header p { font-size:10px; color:#666; margin-top:3px; }
+.pdf-footer-print { display:none; margin-top:18px; padding-top:10px; border-top:1px solid #ccc; font-size:9px; color:#666; text-align:center; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="logo">
+      <div class="logo-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+          <path d="M13 2L4.09 12.11C3.69 12.59 4.02 13.33 4.65 13.33H11V22L19.91 11.89C20.31 11.41 19.98 10.67 19.35 10.67H13V2Z" fill="#0A0E1A"/>
+        </svg>
+      </div>
+      <div class="logo-text">Elec<span>Dim</span> Pro</div>
+    </div>
+    <div class="header-right">
+      <button id="btn-instalar" onclick="instalarApp()" style="display:none;align-items:center;gap:6px;padding:6px 12px;background:var(--amber);border:none;border-radius:6px;color:#0A0E1A;font-size:11px;font-weight:700;cursor:pointer;letter-spacing:0.5px;">
+        📲 Instalar App
+      </button>
+      <button class="theme-btn" onclick="toggleTheme()" id="themeBtn" title="Alternar tema">🌙</button>
+    </div>
+  </div>
+</header>
+
+<div class="app">
+
+  <!-- FORMULÁRIO -->
+  <div class="card">
+    <div class="card-header">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-4 0v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg>
+      <h2>Parâmetros da Instalação</h2>
+    </div>
+
+    <!-- NOTAS DO PROJETO -->
+    <div class="project-fields">
+      <div class="project-field-row">
+        <div class="project-field">
+          <label>Nome do Projeto</label>
+          <input type="text" id="proj-nome" placeholder="Ex: Residência João Silva">
+        </div>
+        <div class="project-field" style="max-width:130px">
+          <label>Cliente / Local</label>
+          <input type="text" id="proj-local" placeholder="Ex: Nampula">
+        </div>
+      </div>
+      <div class="project-field">
+        <label>Observações</label>
+        <textarea id="proj-obs" rows="2" placeholder="Notas adicionais..."></textarea>
+      </div>
+    </div>
+
+    <!-- TENSÃO -->
+    <div class="tensao-row">
+      <div class="tensao-label">Tensão</div>
+      <div class="tensao-btns">
+        <button class="tensao-btn" onclick="setTensao(127,this)">127V</button>
+        <button class="tensao-btn active" onclick="setTensao(220,this)">220V</button>
+        <button class="tensao-btn" onclick="setTensao(380,this)">380V</button>
+      </div>
+      <input class="tensao-custom" type="number" id="tensao" value="220" min="100" max="480" placeholder="V">
+    </div>
+
+    <!-- TABS -->
+    <div class="tabs-nav">
+      <button class="tab-btn active" onclick="switchTab('ilum',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        Iluminação <span class="tab-count" id="count-ilum">0</span>
+      </button>
+      <button class="tab-btn" onclick="switchTab('tom',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="5" r="3"/><circle cx="12" cy="19" r="3"/><line x1="3" y1="12" x2="21" y2="12"/></svg>
+        Tomadas <span class="tab-count" id="count-tom">0</span>
+      </button>
+      <button class="tab-btn" onclick="switchTab('res',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/></svg>
+        Resistivos <span class="tab-count" id="count-res">0</span>
+      </button>
+      <button class="tab-btn" onclick="switchTab('mot',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07M8.46 8.46a5 5 0 0 0 0 7.07"/></svg>
+        Motores <span class="tab-count" id="count-mot">0</span>
+      </button>
+      <button class="tab-btn" onclick="switchTab('ref',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        Referência <span class="tab-count" style="background:transparent"></span>
+      </button>
+    </div>
+
+    <div class="tab-content active" id="tab-ilum">
+      <div class="item-list" id="list-ilum"></div>
+      <button class="btn-add" onclick="addItem('ilum','Lâmpada')">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Adicionar Lâmpada
+      </button>
+      <div class="tab-note">Limite 1200W/circ · FP 0.95 · Majoração 10%</div>
+    </div>
+    <div class="tab-content" id="tab-tom">
+      <div class="item-list" id="list-tom"></div>
+      <button class="btn-add" onclick="addItem('tom','Tomada')">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Adicionar Tomada
+      </button>
+      <div class="tab-note">Limite 2200W/circ · FP 0.90 · Majoração 20%</div>
+    </div>
+    <div class="tab-content" id="tab-res">
+      <div class="item-list" id="list-res"></div>
+      <button class="btn-add" onclick="addItem('res','Aparelho')">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Adicionar Aparelho
+      </button>
+      <div class="tab-note">Circ. individual · FP 1.0 · Cabo mín. 2.5mm²</div>
+    </div>
+    <div class="tab-content" id="tab-mot">
+      <div class="item-list" id="list-mot"></div>
+      <button class="btn-add" onclick="addItem('mot','Motor')">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Adicionar Motor
+      </button>
+      <div class="tab-note">Circ. individual · FP 0.80 · Majoração 30% · Cabo mín. 2.5mm²</div>
+    </div>
+    <div class="tab-content" id="tab-ref">
+      <input class="ref-search" type="text" placeholder="Pesquisar equipamento..." oninput="filtrarRef(this.value)">
+      <div id="ref-table-wrap"></div>
+    </div>
+
+    <button class="btn-dimensionar" id="btnDim" onclick="dimensionar()">⚡ DIMENSIONAR</button>
+  </div>
+
+  <!-- HISTÓRICO -->
+  <div class="card" id="history-card">
+    <div class="card-header">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      <h2>Projetos Recentes</h2>
+    </div>
+    <div class="history-list" id="history-list">
+      <div class="history-empty">Nenhum projeto guardado ainda.</div>
+    </div>
+  </div>
+
+  <!-- RESULTADOS -->
+  <div class="results-col" id="results-col">
+    <div class="card">
+      <div class="pdf-header">
+        <h1>⚡ ElecDim Pro — Relatório Técnico</h1>
+        <p id="pdf-meta"></p>
+      </div>
+      <div class="empty-state">
+        <div class="empty-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#475569" stroke-width="1.5"><path d="M13 2L4.09 12.11C3.69 12.59 4.02 13.33 4.65 13.33H11V22L19.91 11.89C20.31 11.41 19.98 10.67 19.35 10.67H13V2Z"/></svg>
+        </div>
+        <h3>Aguardando Dimensionamento</h3>
+        <p>Preencha os parâmetros e clique em Dimensionar.</p>
+      </div>
+      <div class="pdf-footer-print">
+        Elaborado por: Odêncio Hermínio Maculuve | odencmaculuve@gmail.com | WhatsApp: 866408875
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer class="app-footer">
+  <div class="footer-inner">
+    <div class="footer-name">Odêncio Hermínio Maculuve</div>
+    <div class="footer-contacts">
+      <a class="footer-contact" href="mailto:odencmaculuve@gmail.com">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 7 10-7"/></svg>
+        odencmaculuve@gmail.com
+      </a>
+      <a class="footer-contact" href="https://wa.me/258866408875" target="_blank">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+        866 408 875
+      </a>
+    </div>
+  </div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════════
+// ESTADO
+// ═══════════════════════════════════════════════
+const items  = { ilum:[], tom:[], res:[], mot:[] };
+const nextId = { ilum:1, tom:1, res:1, mot:1 };
+
+// ═══════════════════════════════════════════════
+// TEMA
+// ═══════════════════════════════════════════════
+function toggleTheme() {
+  const html = document.documentElement;
+  const dark = html.getAttribute('data-theme') === 'dark';
+  html.setAttribute('data-theme', dark ? 'light' : 'dark');
+  document.getElementById('themeBtn').textContent = dark ? '🌙' : '☀️';
+  localStorage.setItem('elecdim_theme', dark ? 'light' : 'dark');
+}
+(function initTheme() {
+  const t = localStorage.getItem('elecdim_theme') || 'dark';
+  document.documentElement.setAttribute('data-theme', t);
+  document.getElementById('themeBtn').textContent = t === 'dark' ? '🌙' : '☀️';
+})();
+
+// ═══════════════════════════════════════════════
+// TENSÃO
+// ═══════════════════════════════════════════════
+function setTensao(val, btn) {
+  document.getElementById('tensao').value = val;
+  document.querySelectorAll('.tensao-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+document.getElementById('tensao').addEventListener('input', () => {
+  document.querySelectorAll('.tensao-btn').forEach(b => b.classList.remove('active'));
+});
+
+// ═══════════════════════════════════════════════
+// TABS
+// ═══════════════════════════════════════════════
+function switchTab(id, btn) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tab-' + id).classList.add('active');
+}
+
+// ═══════════════════════════════════════════════
+// ITEMS
+// ═══════════════════════════════════════════════
+function addItem(tipo, labelBase) {
+  const id = nextId[tipo]++;
+  const pos = items[tipo].length + 1;
+  items[tipo].push({ id, nome: `${labelBase} ${pos}`, pot: 0 });
+  renderList(tipo, labelBase);
+  setTimeout(() => { const el = document.getElementById(`pot-${tipo}-${id}`); if (el) el.focus(); }, 50);
+}
+
+function dupItem(tipo, id, labelBase) {
+  const src = items[tipo].find(it => it.id === id);
+  if (!src) return;
+  const newId = nextId[tipo]++;
+  const pos = items[tipo].length + 1;
+  items[tipo].push({ id: newId, nome: `${labelBase} ${pos}`, pot: src.pot });
+  renderList(tipo, labelBase);
+  showToast('✓ Item duplicado');
+}
+
+function removeItem(tipo, id, labelBase) {
+  const row = document.getElementById(`row-${tipo}-${id}`);
+  if (row) {
+    row.style.opacity = '0'; row.style.transform = 'translateX(8px)';
+    row.style.transition = 'all 0.15s ease';
+    setTimeout(() => { items[tipo] = items[tipo].filter(it => it.id !== id); renderList(tipo, labelBase); }, 150);
+  } else {
+    items[tipo] = items[tipo].filter(it => it.id !== id);
+    renderList(tipo, labelBase);
+  }
+}
+
+function renderList(tipo, labelBase) {
+  const list = document.getElementById('list-' + tipo);
+  list.innerHTML = '';
+  items[tipo].forEach(obj => {
+    const row = document.createElement('div');
+    row.className = 'item-row'; row.id = `row-${tipo}-${obj.id}`;
+    row.innerHTML = `
+      <span class="item-label">${obj.nome}</span>
+      <input class="item-input" type="number" id="pot-${tipo}-${obj.id}"
+        placeholder="W" min="0" step="1"
+        value="${obj.pot > 0 ? obj.pot : ''}"
+        oninput="updatePot('${tipo}',${obj.id},this.value)">
+      <span class="item-unit">W</span>
+      <div class="item-actions">
+        <button class="btn-icon dup" onclick="dupItem('${tipo}',${obj.id},'${labelBase}')" title="Duplicar">⧉</button>
+        <button class="btn-icon del" onclick="removeItem('${tipo}',${obj.id},'${labelBase}')" title="Remover">×</button>
+      </div>`;
+    list.appendChild(row);
+  });
+  document.getElementById('count-' + tipo).textContent = items[tipo].length;
+}
+
+function updatePot(tipo, id, val) {
+  const obj = items[tipo].find(it => it.id === id);
+  if (obj) obj.pot = parseFloat(val) || 0;
+}
+
+function getNome(tipo, obj) {
+  const base = { ilum:'Lâmpada', tom:'Tomada', res:'Aparelho', mot:'Motor' };
+  return obj.nome && obj.nome.trim() ? obj.nome.trim() : `${base[tipo]} ${obj.id}`;
+}
+
+// ═══════════════════════════════════════════════
+// TABELA REFERÊNCIA
+// ═══════════════════════════════════════════════
+const REF_DATA = [
+
+  // ══════════════════════════════════════
+  // ILUMINAÇÃO — LED
+  // ══════════════════════════════════════
+  { cat:'Iluminação — LED',      nome:'Lâmpada LED bulbo 3W',          pot:3,   aba:'ilum', label:'Lâmpada' },
+  { cat:'Iluminação — LED',      nome:'Lâmpada LED bulbo 5W',          pot:5,   aba:'ilum', label:'Lâmpada' },
+  { cat:'Iluminação — LED',      nome:'Lâmpada LED bulbo 7W',          pot:7,   aba:'ilum', label:'Lâmpada' },
+  { cat:'Iluminação — LED',      nome:'Lâmpada LED bulbo 9W',          pot:9,   aba:'ilum', label:'Lâmpada' },
+  { cat:'Iluminação — LED',      nome:'Lâmpada LED bulbo 12W',         pot:12,  aba:'ilum', label:'Lâmpada' },
+  { cat:'Iluminação — LED',      nome:'Lâmpada LED bulbo 15W',         pot:15,  aba:'ilum', label:'Lâmpada' },
+  { cat:'Iluminação — LED',      nome:'Lâmpada LED bulbo 20W',         pot:20,  aba:'ilum', label:'Lâmpada' },
+  { cat:'Iluminação — LED',      nome:'Lâmpada LED bulbo 30W',         pot:30,  aba:'ilum', label:'Lâmpada' },
+  { cat:'Iluminação — LED',      nome:'Lâmpada LED PAR20 6W',          pot:6,   aba:'ilum', label:'Lâmpada' },
+  { cat:'Iluminação — LED',      nome:'Lâmpada LED PAR30 9W',          pot:9,   aba:'ilum', label:'Lâmpada' },
+  { cat:'Iluminação — LED',      nome:'Lâmpada LED PAR38 15W',         pot:15,  aba:'ilum', label:'Lâmpada' },
+  { cat:'Iluminação — LED',      nome:'Lâmpada LED dicróica GU10 5W',  pot:5,   aba:'ilum', label:'Lâmpada' },
+  { cat:'Iluminação — LED',      nome:'Lâmpada LED dicróica MR16 7W',  pot:7,   aba:'ilum', label:'Lâmpada' },
+  { cat:'Iluminação — LED',      nome:'Lâmpada LED vela 4W',           pot:4,   aba:'ilum', label:'Lâmpada' },
+  { cat:'Iluminação — LED',      nome:'Lâmpada LED globo 8W',          pot:8,   aba:'ilum', label:'Lâmpada' },
+  { cat:'Iluminação — LED',      nome:'Tubular LED T8 9W (60cm)',      pot:9,   aba:'ilum', label:'Lâmpada' },
+  { cat:'Iluminação — LED',      nome:'Tubular LED T8 18W (120cm)',    pot:18,  aba:'ilum', label:'Lâmpada' },
+  { cat:'Iluminação — LED',      nome:'Tubular LED T8 24W (150cm)',    pot:24,  aba:'ilum', label:'Lâmpada' },
+  { cat:'Iluminação — LED',      nome:'Tubular LED T5 14W',            pot:14,  aba:'ilum', label:'Lâmpada' },
+  { cat:'Iluminação — LED',      nome:'Painel LED (plafon) 12W',       pot:12,  aba:'ilum', label:'Lâmpada' },
+  { cat:'Iluminação — LED',      nome:'Painel LED (plafon) 18W',       pot:18,  aba:'ilum', label:'Lâmpada' },
+  { cat:'Iluminação — LED',      nome:'Painel LED (plafon) 24W',       pot:24,  aba:'ilum', label:'Lâmpada' },
+  { cat:'Iluminação — LED',      nome:'Painel LED (plafon) 36W',       pot:36,  aba:'ilum', label:'Lâmpada' },
+  { cat:'Iluminação — LED',      nome:'Downlight LED embutido 5W',     pot:5,   aba:'ilum', label:'Lâmpada' },
+  { cat:'Iluminação — LED',      nome:'Downlight LED embutido 9W',     pot:9,   aba:'ilum', label:'Lâmpada' },
+  { cat:'Iluminação — LED',      nome:'Spot LED trilho 7W',            pot:7,   aba:'ilum', label:'Lâmpada' },
+  { cat:'Iluminação — LED',      nome:'Spot LED trilho 12W',           pot:12,  aba:'ilum', label:'Lâmpada' },
+  { cat:'Iluminação — LED',      nome:'Fita LED por metro 4,8W',       pot:5,   aba:'ilum', label:'Lâmpada' },
+  { cat:'Iluminação — LED',      nome:'Fita LED por metro 9,6W',       pot:10,  aba:'ilum', label:'Lâmpada' },
+  { cat:'Iluminação — LED',      nome:'Holofote LED 20W',              pot:20,  aba:'ilum', label:'Lâmpada' },
+  { cat:'Iluminação — LED',      nome:'Holofote LED 30W',              pot:30,  aba:'ilum', label:'Lâmpada' },
+  { cat:'Iluminação — LED',      nome:'Holofote LED 50W',              pot:50,  aba:'ilum', label:'Lâmpada' },
+  { cat:'Iluminação — LED',      nome:'Holofote LED 100W',             pot:100, aba:'ilum', label:'Lâmpada' },
+  { cat:'Iluminação — LED',      nome:'Holofote LED 150W',             pot:150, aba:'ilum', label:'Lâmpada' },
+  { cat:'Iluminação — LED',      nome:'Holofote LED 200W',             pot:200, aba:'ilum', label:'Lâmpada' },
+  { cat:'Iluminação — LED',      nome:'Refletor LED solar 10W',        pot:10,  aba:'ilum', label:'Lâmpada' },
+  { cat:'Iluminação — LED',      nome:'Refletor LED solar 20W',        pot:20,  aba:'ilum', label:'Lâmpada' },
+
+  // ══════════════════════════════════════
+  // ILUMINAÇÃO — FLUORESCENTE
+  // ══════════════════════════════════════
+  { cat:'Iluminação — Fluorescente', nome:'Fluorescente compacta 9W',   pot:9,  aba:'ilum', label:'Lâmpada' },
+  { cat:'Iluminação — Fluorescente', nome:'Fluorescente compacta 11W',  pot:11, aba:'ilum', label:'Lâmpada' },
+  { cat:'Iluminação — Fluorescente', nome:'Fluorescente compacta 15W',  pot:15, aba:'ilum', label:'Lâmpada' },
+  { cat:'Iluminação — Fluorescente', nome:'Fluorescente compacta 20W',  pot:20, aba:'ilum', label:'Lâmpada' },
+  { cat:'Iluminação — Fluorescente', nome:'Fluorescente compacta 25W',  pot:25, aba:'ilum', label:'Lâmpada' },
+  { cat:'Iluminação — Fluorescente', nome:'Fluorescente tubular 20W',   pot:20, aba:'ilum', label:'Lâmpada' },
+  { cat:'Iluminação — Fluorescente', nome:'Fluorescente tubular 32W',   pot:32, aba:'ilum', label:'Lâmpada' },
+  { cat:'Iluminação — Fluorescente', nome:'Fluorescente tubular 40W',   pot:40, aba:'ilum', label:'Lâmpada' },
+
+  // ══════════════════════════════════════
+  // ILUMINAÇÃO — INCANDESCENTE / HALÓGENA
+  // ══════════════════════════════════════
+  { cat:'Iluminação — Incandescente', nome:'Incandescente 25W',         pot:25,  aba:'ilum', label:'Lâmpada' },
+  { cat:'Iluminação — Incandescente', nome:'Incandescente 40W',         pot:40,  aba:'ilum', label:'Lâmpada' },
+  { cat:'Iluminação — Incandescente', nome:'Incandescente 60W',         pot:60,  aba:'ilum', label:'Lâmpada' },
+  { cat:'Iluminação — Incandescente', nome:'Incandescente 75W',         pot:75,  aba:'ilum', label:'Lâmpada' },
+  { cat:'Iluminação — Incandescente', nome:'Incandescente 100W',        pot:100, aba:'ilum', label:'Lâmpada' },
+  { cat:'Iluminação — Incandescente', nome:'Halógena palito 20W',       pot:20,  aba:'ilum', label:'Lâmpada' },
+  { cat:'Iluminação — Incandescente', nome:'Halógena palito 50W',       pot:50,  aba:'ilum', label:'Lâmpada' },
+  { cat:'Iluminação — Incandescente', nome:'Halógena dicroica 35W',     pot:35,  aba:'ilum', label:'Lâmpada' },
+  { cat:'Iluminação — Incandescente', nome:'Halógena dicroica 50W',     pot:50,  aba:'ilum', label:'Lâmpada' },
+  { cat:'Iluminação — Incandescente', nome:'Halógena tubular 150W',     pot:150, aba:'ilum', label:'Lâmpada' },
+  { cat:'Iluminação — Incandescente', nome:'Halógena tubular 300W',     pot:300, aba:'ilum', label:'Lâmpada' },
+  { cat:'Iluminação — Incandescente', nome:'Halógena tubular 500W',     pot:500, aba:'ilum', label:'Lâmpada' },
+
+  // ══════════════════════════════════════
+  // ILUMINAÇÃO — DESCARGA (EXTERIOR/INDUSTRIAL)
+  // ══════════════════════════════════════
+  { cat:'Iluminação — Descarga',  nome:'Vapor de sódio 70W',           pot:70,  aba:'ilum', label:'Lâmpada' },
+  { cat:'Iluminação — Descarga',  nome:'Vapor de sódio 100W',          pot:100, aba:'ilum', label:'Lâmpada' },
+  { cat:'Iluminação — Descarga',  nome:'Vapor de sódio 150W',          pot:150, aba:'ilum', label:'Lâmpada' },
+  { cat:'Iluminação — Descarga',  nome:'Vapor de sódio 250W',          pot:250, aba:'ilum', label:'Lâmpada' },
+  { cat:'Iluminação — Descarga',  nome:'Vapor de sódio 400W',          pot:400, aba:'ilum', label:'Lâmpada' },
+  { cat:'Iluminação — Descarga',  nome:'Vapor de mercúrio 80W',        pot:80,  aba:'ilum', label:'Lâmpada' },
+  { cat:'Iluminação — Descarga',  nome:'Vapor de mercúrio 125W',       pot:125, aba:'ilum', label:'Lâmpada' },
+  { cat:'Iluminação — Descarga',  nome:'Vapor de mercúrio 250W',       pot:250, aba:'ilum', label:'Lâmpada' },
+  { cat:'Iluminação — Descarga',  nome:'Vapor de mercúrio 400W',       pot:400, aba:'ilum', label:'Lâmpada' },
+  { cat:'Iluminação — Descarga',  nome:'Iodetos metálicos 70W',        pot:70,  aba:'ilum', label:'Lâmpada' },
+  { cat:'Iluminação — Descarga',  nome:'Iodetos metálicos 150W',       pot:150, aba:'ilum', label:'Lâmpada' },
+  { cat:'Iluminação — Descarga',  nome:'Iodetos metálicos 250W',       pot:250, aba:'ilum', label:'Lâmpada' },
+  { cat:'Iluminação — Descarga',  nome:'Lâmpada mista 160W',           pot:160, aba:'ilum', label:'Lâmpada' },
+  { cat:'Iluminação — Descarga',  nome:'Luminária de emergência 8W',   pot:8,   aba:'ilum', label:'Lâmpada' },
+  { cat:'Iluminação — Descarga',  nome:'Poste LED de rua 30W',         pot:30,  aba:'ilum', label:'Lâmpada' },
+  { cat:'Iluminação — Descarga',  nome:'Poste LED de rua 60W',         pot:60,  aba:'ilum', label:'Lâmpada' },
+  { cat:'Iluminação — Descarga',  nome:'Poste LED de rua 100W',        pot:100, aba:'ilum', label:'Lâmpada' },
+  { cat:'Iluminação — Descarga',  nome:'Lustre (3 lâmpadas LED 9W)',   pot:27,  aba:'ilum', label:'Lâmpada' },
+  { cat:'Iluminação — Descarga',  nome:'Lustre (5 lâmpadas LED 9W)',   pot:45,  aba:'ilum', label:'Lâmpada' },
+
+  // ══════════════════════════════════════
+  // TOMADAS — ENTRETENIMENTO
+  // ══════════════════════════════════════
+  { cat:'Tomadas — Entretenimento', nome:'TV LED 21"',                  pot:50,  aba:'tom', label:'Tomada' },
+  { cat:'Tomadas — Entretenimento', nome:'TV LED 32"',                  pot:80,  aba:'tom', label:'Tomada' },
+  { cat:'Tomadas — Entretenimento', nome:'TV LED 42"',                  pot:120, aba:'tom', label:'Tomada' },
+  { cat:'Tomadas — Entretenimento', nome:'TV LED 50"',                  pot:140, aba:'tom', label:'Tomada' },
+  { cat:'Tomadas — Entretenimento', nome:'TV LED 55"',                  pot:150, aba:'tom', label:'Tomada' },
+  { cat:'Tomadas — Entretenimento', nome:'TV LED 65"',                  pot:200, aba:'tom', label:'Tomada' },
+  { cat:'Tomadas — Entretenimento', nome:'TV LED 75"',                  pot:280, aba:'tom', label:'Tomada' },
+  { cat:'Tomadas — Entretenimento', nome:'Decoder / receptor satélite', pot:15,  aba:'tom', label:'Tomada' },
+  { cat:'Tomadas — Entretenimento', nome:'Home Theater / Sound bar',    pot:200, aba:'tom', label:'Tomada' },
+  { cat:'Tomadas — Entretenimento', nome:'Amplificador de som',         pot:300, aba:'tom', label:'Tomada' },
+  { cat:'Tomadas — Entretenimento', nome:'Subwoofer',                   pot:200, aba:'tom', label:'Tomada' },
+  { cat:'Tomadas — Entretenimento', nome:'Videogame (PS4/Xbox)',        pot:150, aba:'tom', label:'Tomada' },
+  { cat:'Tomadas — Entretenimento', nome:'Videogame (PS5/Xbox Series)', pot:200, aba:'tom', label:'Tomada' },
+  { cat:'Tomadas — Entretenimento', nome:'Projetor 200W',               pot:200, aba:'tom', label:'Tomada' },
+  { cat:'Tomadas — Entretenimento', nome:'Projetor 300W',               pot:300, aba:'tom', label:'Tomada' },
+  { cat:'Tomadas — Entretenimento', nome:'Câmera CCTV (por câmera)',    pot:10,  aba:'tom', label:'Tomada' },
+  { cat:'Tomadas — Entretenimento', nome:'DVR / NVR segurança',         pot:30,  aba:'tom', label:'Tomada' },
+
+  // ══════════════════════════════════════
+  // TOMADAS — INFORMÁTICA
+  // ══════════════════════════════════════
+  { cat:'Tomadas — Informática', nome:'Computador desktop',             pot:300, aba:'tom', label:'Tomada' },
+  { cat:'Tomadas — Informática', nome:'Computador gamer',               pot:600, aba:'tom', label:'Tomada' },
+  { cat:'Tomadas — Informática', nome:'Monitor LCD/LED 19"',            pot:25,  aba:'tom', label:'Tomada' },
+  { cat:'Tomadas — Informática', nome:'Monitor LCD/LED 27"',            pot:40,  aba:'tom', label:'Tomada' },
+  { cat:'Tomadas — Informática', nome:'Laptop / Notebook',              pot:65,  aba:'tom', label:'Tomada' },
+  { cat:'Tomadas — Informática', nome:'Tablet (carregador)',            pot:20,  aba:'tom', label:'Tomada' },
+  { cat:'Tomadas — Informática', nome:'Smartphone (carregador)',        pot:20,  aba:'tom', label:'Tomada' },
+  { cat:'Tomadas — Informática', nome:'Impressora jato de tinta',      pot:35,  aba:'tom', label:'Tomada' },
+  { cat:'Tomadas — Informática', nome:'Impressora laser',               pot:500, aba:'tom', label:'Tomada' },
+  { cat:'Tomadas — Informática', nome:'Impressora multifunções',        pot:400, aba:'tom', label:'Tomada' },
+  { cat:'Tomadas — Informática', nome:'Roteador Wi-Fi',                 pot:12,  aba:'tom', label:'Tomada' },
+  { cat:'Tomadas — Informática', nome:'Switch de rede 8 portas',        pot:20,  aba:'tom', label:'Tomada' },
+  { cat:'Tomadas — Informática', nome:'No-break / UPS 600VA',           pot:300, aba:'tom', label:'Tomada' },
+  { cat:'Tomadas — Informática', nome:'No-break / UPS 1200VA',          pot:600, aba:'tom', label:'Tomada' },
+  { cat:'Tomadas — Informática', nome:'Servidor pequeno',               pot:500, aba:'tom', label:'Tomada' },
+
+  // ══════════════════════════════════════
+  // TOMADAS — COZINHA
+  // ══════════════════════════════════════
+  { cat:'Tomadas — Cozinha', nome:'Frigorífico 300L',                   pot:150, aba:'tom', label:'Tomada' },
+  { cat:'Tomadas — Cozinha', nome:'Frigorífico duplex 450L',            pot:250, aba:'tom', label:'Tomada' },
+  { cat:'Tomadas — Cozinha', nome:'Frigorífico side by side',           pot:350, aba:'tom', label:'Tomada' },
+  { cat:'Tomadas — Cozinha', nome:'Congelador / Freezer 200L',          pot:200, aba:'tom', label:'Tomada' },
+  { cat:'Tomadas — Cozinha', nome:'Micro-ondas 20L',                    pot:1000,aba:'tom', label:'Tomada' },
+  { cat:'Tomadas — Cozinha', nome:'Micro-ondas 30L',                    pot:1200,aba:'tom', label:'Tomada' },
+  { cat:'Tomadas — Cozinha', nome:'Liquidificador 500W',                pot:500, aba:'tom', label:'Tomada' },
+  { cat:'Tomadas — Cozinha', nome:'Batedeira 400W',                     pot:400, aba:'tom', label:'Tomada' },
+  { cat:'Tomadas — Cozinha', nome:'Processador de alimentos',           pot:600, aba:'tom', label:'Tomada' },
+  { cat:'Tomadas — Cozinha', nome:'Cafeteira elétrica',                 pot:900, aba:'tom', label:'Tomada' },
+  { cat:'Tomadas — Cozinha', nome:'Máquina de café espresso',           pot:1200,aba:'tom', label:'Tomada' },
+  { cat:'Tomadas — Cozinha', nome:'Air fryer / Fritadeira',             pot:1500,aba:'tom', label:'Tomada' },
+  { cat:'Tomadas — Cozinha', nome:'Panela elétrica de arroz',           pot:500, aba:'tom', label:'Tomada' },
+  { cat:'Tomadas — Cozinha', nome:'Panela de pressão elétrica',         pot:1000,aba:'tom', label:'Tomada' },
+  { cat:'Tomadas — Cozinha', nome:'Espremedor de frutas',               pot:150, aba:'tom', label:'Tomada' },
+  { cat:'Tomadas — Cozinha', nome:'Máquina de gelo',                    pot:200, aba:'tom', label:'Tomada' },
+  { cat:'Tomadas — Cozinha', nome:'Máquina de pão',                     pot:600, aba:'tom', label:'Tomada' },
+  { cat:'Tomadas — Cozinha', nome:'Iogurteira elétrica',                pot:30,  aba:'tom', label:'Tomada' },
+
+  // ══════════════════════════════════════
+  // TOMADAS — USO GERAL / HIGIENE
+  // ══════════════════════════════════════
+  { cat:'Tomadas — Uso Geral', nome:'Ventoinha de mesa 30cm',           pot:60,  aba:'tom', label:'Tomada' },
+  { cat:'Tomadas — Uso Geral', nome:'Ventoinha de coluna 40cm',         pot:80,  aba:'tom', label:'Tomada' },
+  { cat:'Tomadas — Uso Geral', nome:'Aspirador de pó 1400W',            pot:1400,aba:'tom', label:'Tomada' },
+  { cat:'Tomadas — Uso Geral', nome:'Aspirador de pó robô',             pot:30,  aba:'tom', label:'Tomada' },
+  { cat:'Tomadas — Uso Geral', nome:'Máquina de costura 100W',          pot:100, aba:'tom', label:'Tomada' },
+  { cat:'Tomadas — Uso Geral', nome:'Carregador veículo elétrico 2kW',  pot:2000,aba:'tom', label:'Tomada' },
+  { cat:'Tomadas — Uso Geral', nome:'Tomada geral uso misto',           pot:1500,aba:'tom', label:'Tomada' },
+  { cat:'Tomadas — Uso Geral', nome:'Régua / Extensão geral',           pot:1000,aba:'tom', label:'Tomada' },
+  { cat:'Tomadas — Uso Geral', nome:'Secador de mãos',                  pot:2000,aba:'tom', label:'Tomada' },
+  { cat:'Tomadas — Uso Geral', nome:'Bebedouro de água (com frio)',     pot:120, aba:'tom', label:'Tomada' },
+  { cat:'Tomadas — Uso Geral', nome:'Bebedouro industrial',             pot:500, aba:'tom', label:'Tomada' },
+  { cat:'Tomadas — Uso Geral', nome:'Purificador de ar',                pot:50,  aba:'tom', label:'Tomada' },
+  { cat:'Tomadas — Uso Geral', nome:'Carregador de bateria auto',       pot:500, aba:'tom', label:'Tomada' },
+  { cat:'Tomadas — Uso Geral', nome:'Furadeira elétrica 500W',          pot:500, aba:'tom', label:'Tomada' },
+  { cat:'Tomadas — Uso Geral', nome:'Serra circular 1200W',             pot:1200,aba:'tom', label:'Tomada' },
+
+  // ══════════════════════════════════════
+  // RESISTIVOS — BANHO / AQUECIMENTO ÁGUA
+  // ══════════════════════════════════════
+  { cat:'Resistivos — Banho/Água', nome:'Chuveiro elétrico 3500W',      pot:3500, aba:'res', label:'Aparelho' },
+  { cat:'Resistivos — Banho/Água', nome:'Chuveiro elétrico 4400W',      pot:4400, aba:'res', label:'Aparelho' },
+  { cat:'Resistivos — Banho/Água', nome:'Chuveiro elétrico 5500W',      pot:5500, aba:'res', label:'Aparelho' },
+  { cat:'Resistivos — Banho/Água', nome:'Chuveiro elétrico 6800W',      pot:6800, aba:'res', label:'Aparelho' },
+  { cat:'Resistivos — Banho/Água', nome:'Torneira elétrica 3500W',      pot:3500, aba:'res', label:'Aparelho' },
+  { cat:'Resistivos — Banho/Água', nome:'Torneira elétrica 4000W',      pot:4000, aba:'res', label:'Aparelho' },
+  { cat:'Resistivos — Banho/Água', nome:'Boiler elétrico 1500W',        pot:1500, aba:'res', label:'Aparelho' },
+  { cat:'Resistivos — Banho/Água', nome:'Boiler elétrico 3000W',        pot:3000, aba:'res', label:'Aparelho' },
+  { cat:'Resistivos — Banho/Água', nome:'Boiler elétrico 6000W',        pot:6000, aba:'res', label:'Aparelho' },
+  { cat:'Resistivos — Banho/Água', nome:'Aquecedor de piscina 6kW',     pot:6000, aba:'res', label:'Aparelho' },
+
+  // ══════════════════════════════════════
+  // RESISTIVOS — COZINHA / FOGÃO
+  // ══════════════════════════════════════
+  { cat:'Resistivos — Cozinha', nome:'Fogão elétrico 1 boca 1500W',    pot:1500, aba:'res', label:'Aparelho' },
+  { cat:'Resistivos — Cozinha', nome:'Fogão elétrico 2 bocas 3000W',   pot:3000, aba:'res', label:'Aparelho' },
+  { cat:'Resistivos — Cozinha', nome:'Fogão elétrico 4 bocas 6000W',   pot:6000, aba:'res', label:'Aparelho' },
+  { cat:'Resistivos — Cozinha', nome:'Fogão de indução 1 boca 2000W',  pot:2000, aba:'res', label:'Aparelho' },
+  { cat:'Resistivos — Cozinha', nome:'Fogão de indução 2 bocas 3500W', pot:3500, aba:'res', label:'Aparelho' },
+  { cat:'Resistivos — Cozinha', nome:'Forno elétrico embutir 3000W',   pot:3000, aba:'res', label:'Aparelho' },
+  { cat:'Resistivos — Cozinha', nome:'Forno elétrico bancada 1500W',   pot:1500, aba:'res', label:'Aparelho' },
+  { cat:'Resistivos — Cozinha', nome:'Forno de micro-ondas 1200W',     pot:1200, aba:'res', label:'Aparelho' },
+  { cat:'Resistivos — Cozinha', nome:'Grelhador / Grill elétrico',     pot:2000, aba:'res', label:'Aparelho' },
+  { cat:'Resistivos — Cozinha', nome:'Chaleira elétrica 1500W',        pot:1500, aba:'res', label:'Aparelho' },
+  { cat:'Resistivos — Cozinha', nome:'Chaleira elétrica 2200W',        pot:2200, aba:'res', label:'Aparelho' },
+  { cat:'Resistivos — Cozinha', nome:'Torradeira 800W',                pot:800,  aba:'res', label:'Aparelho' },
+  { cat:'Resistivos — Cozinha', nome:'Máquina de lavar louça 2000W',   pot:2000, aba:'res', label:'Aparelho' },
+
+  // ══════════════════════════════════════
+  // RESISTIVOS — LAVANDARIA
+  // ══════════════════════════════════════
+  { cat:'Resistivos — Lavandaria', nome:'Máquina de lavar 5kg (sem aquec.)',pot:500, aba:'res', label:'Aparelho' },
+  { cat:'Resistivos — Lavandaria', nome:'Máquina de lavar 7kg 2200W',  pot:2200, aba:'res', label:'Aparelho' },
+  { cat:'Resistivos — Lavandaria', nome:'Máquina de lavar 10kg 2500W', pot:2500, aba:'res', label:'Aparelho' },
+  { cat:'Resistivos — Lavandaria', nome:'Máquina lava e seca 2500W',   pot:2500, aba:'res', label:'Aparelho' },
+  { cat:'Resistivos — Lavandaria', nome:'Secadora de roupa 4000W',     pot:4000, aba:'res', label:'Aparelho' },
+  { cat:'Resistivos — Lavandaria', nome:'Ferro de passar 1000W',       pot:1000, aba:'res', label:'Aparelho' },
+  { cat:'Resistivos — Lavandaria', nome:'Ferro de passar 2000W',       pot:2000, aba:'res', label:'Aparelho' },
+  { cat:'Resistivos — Lavandaria', nome:'Ferro a vapor / passagem',    pot:2400, aba:'res', label:'Aparelho' },
+
+  // ══════════════════════════════════════
+  // RESISTIVOS — HIGIENE PESSOAL
+  // ══════════════════════════════════════
+  { cat:'Resistivos — Higiene', nome:'Secador de cabelo 1000W',        pot:1000, aba:'res', label:'Aparelho' },
+  { cat:'Resistivos — Higiene', nome:'Secador de cabelo 1800W',        pot:1800, aba:'res', label:'Aparelho' },
+  { cat:'Resistivos — Higiene', nome:'Secador de cabelo 2200W',        pot:2200, aba:'res', label:'Aparelho' },
+  { cat:'Resistivos — Higiene', nome:'Chapinha / Prancha 60W',         pot:60,   aba:'res', label:'Aparelho' },
+  { cat:'Resistivos — Higiene', nome:'Babyliss / Modelador',           pot:180,  aba:'res', label:'Aparelho' },
+  { cat:'Resistivos — Higiene', nome:'Barbeador / aparador elétrico',  pot:15,   aba:'res', label:'Aparelho' },
+  { cat:'Resistivos — Higiene', nome:'Escova dental elétrica',         pot:5,    aba:'res', label:'Aparelho' },
+
+  // ══════════════════════════════════════
+  // RESISTIVOS — AQUECIMENTO AMBIENTE
+  // ══════════════════════════════════════
+  { cat:'Resistivos — Aquecimento', nome:'Aquecedor elétrico 1000W',   pot:1000, aba:'res', label:'Aparelho' },
+  { cat:'Resistivos — Aquecimento', nome:'Aquecedor elétrico 1500W',   pot:1500, aba:'res', label:'Aparelho' },
+  { cat:'Resistivos — Aquecimento', nome:'Aquecedor elétrico 2000W',   pot:2000, aba:'res', label:'Aparelho' },
+  { cat:'Resistivos — Aquecimento', nome:'Aquecedor a óleo 1500W',     pot:1500, aba:'res', label:'Aparelho' },
+  { cat:'Resistivos — Aquecimento', nome:'Sauna seca residencial 4kW', pot:4000, aba:'res', label:'Aparelho' },
+  { cat:'Resistivos — Aquecimento', nome:'Sauna a vapor 6kW',          pot:6000, aba:'res', label:'Aparelho' },
+
+  // ══════════════════════════════════════
+  // MOTORES — AR CONDICIONADO
+  // ══════════════════════════════════════
+  { cat:'Motores — Ar Condicionado', nome:'Ar cond. split 7000 BTU',   pot:700,  aba:'mot', label:'Motor' },
+  { cat:'Motores — Ar Condicionado', nome:'Ar cond. split 9000 BTU',   pot:900,  aba:'mot', label:'Motor' },
+  { cat:'Motores — Ar Condicionado', nome:'Ar cond. split 12000 BTU',  pot:1200, aba:'mot', label:'Motor' },
+  { cat:'Motores — Ar Condicionado', nome:'Ar cond. split 18000 BTU',  pot:1800, aba:'mot', label:'Motor' },
+  { cat:'Motores — Ar Condicionado', nome:'Ar cond. split 24000 BTU',  pot:2400, aba:'mot', label:'Motor' },
+  { cat:'Motores — Ar Condicionado', nome:'Ar cond. split 30000 BTU',  pot:3000, aba:'mot', label:'Motor' },
+  { cat:'Motores — Ar Condicionado', nome:'Ar cond. split 36000 BTU',  pot:3600, aba:'mot', label:'Motor' },
+  { cat:'Motores — Ar Condicionado', nome:'Ar cond. split 48000 BTU',  pot:4800, aba:'mot', label:'Motor' },
+  { cat:'Motores — Ar Condicionado', nome:'Ar cond. cassete 24000 BTU',pot:2400, aba:'mot', label:'Motor' },
+  { cat:'Motores — Ar Condicionado', nome:'Ar cond. central 60000 BTU',pot:6000, aba:'mot', label:'Motor' },
+  { cat:'Motores — Ar Condicionado', nome:'Ar cond. janela 7500 BTU',  pot:750,  aba:'mot', label:'Motor' },
+  { cat:'Motores — Ar Condicionado', nome:'Ar cond. janela 10000 BTU', pot:1000, aba:'mot', label:'Motor' },
+  { cat:'Motores — Ar Condicionado', nome:'Ar cond. inverter 12000 BTU',pot:900, aba:'mot', label:'Motor' },
+  { cat:'Motores — Ar Condicionado', nome:'Ar cond. inverter 18000 BTU',pot:1300,aba:'mot', label:'Motor' },
+  { cat:'Motores — Ar Condicionado', nome:'Chiller 5TR',               pot:5000, aba:'mot', label:'Motor' },
+
+  // ══════════════════════════════════════
+  // MOTORES — BOMBAS DE ÁGUA
+  // ══════════════════════════════════════
+  { cat:'Motores — Bombas', nome:'Bomba de água 1/4cv (185W)',          pot:185,  aba:'mot', label:'Motor' },
+  { cat:'Motores — Bombas', nome:'Bomba de água 1/3cv (250W)',          pot:250,  aba:'mot', label:'Motor' },
+  { cat:'Motores — Bombas', nome:'Bomba de água 1/2cv (370W)',          pot:370,  aba:'mot', label:'Motor' },
+  { cat:'Motores — Bombas', nome:'Bomba de água 3/4cv (550W)',          pot:550,  aba:'mot', label:'Motor' },
+  { cat:'Motores — Bombas', nome:'Bomba de água 1cv (750W)',            pot:750,  aba:'mot', label:'Motor' },
+  { cat:'Motores — Bombas', nome:'Bomba de água 1,5cv (1100W)',         pot:1100, aba:'mot', label:'Motor' },
+  { cat:'Motores — Bombas', nome:'Bomba de água 2cv (1500W)',           pot:1500, aba:'mot', label:'Motor' },
+  { cat:'Motores — Bombas', nome:'Bomba de água 3cv (2200W)',           pot:2200, aba:'mot', label:'Motor' },
+  { cat:'Motores — Bombas', nome:'Bomba de água 5cv (3700W)',           pot:3700, aba:'mot', label:'Motor' },
+  { cat:'Motores — Bombas', nome:'Bomba submersível 1/2cv',             pot:370,  aba:'mot', label:'Motor' },
+  { cat:'Motores — Bombas', nome:'Bomba submersível 1cv',               pot:750,  aba:'mot', label:'Motor' },
+  { cat:'Motores — Bombas', nome:'Bomba submersível 2cv',               pot:1500, aba:'mot', label:'Motor' },
+  { cat:'Motores — Bombas', nome:'Bomba de piscina 1cv',                pot:750,  aba:'mot', label:'Motor' },
+  { cat:'Motores — Bombas', nome:'Bomba de piscina 1,5cv',              pot:1100, aba:'mot', label:'Motor' },
+  { cat:'Motores — Bombas', nome:'Bomba de recalque 2cv',               pot:1500, aba:'mot', label:'Motor' },
+  { cat:'Motores — Bombas', nome:'Bomba de incêndio 5cv',               pot:3700, aba:'mot', label:'Motor' },
+  { cat:'Motores — Bombas', nome:'Bomba de esgoto 1cv',                 pot:750,  aba:'mot', label:'Motor' },
+
+  // ══════════════════════════════════════
+  // MOTORES — PORTÕES / AUTOMAÇÃO
+  // ══════════════════════════════════════
+  { cat:'Motores — Automação', nome:'Motor portão correr 1/3cv',        pot:250,  aba:'mot', label:'Motor' },
+  { cat:'Motores — Automação', nome:'Motor portão basculante',          pot:300,  aba:'mot', label:'Motor' },
+  { cat:'Motores — Automação', nome:'Motor portão pivotante',           pot:500,  aba:'mot', label:'Motor' },
+  { cat:'Motores — Automação', nome:'Motor persiana elétrica',          pot:100,  aba:'mot', label:'Motor' },
+  { cat:'Motores — Automação', nome:'Motor janela / toldo',             pot:120,  aba:'mot', label:'Motor' },
+  { cat:'Motores — Automação', nome:'Elevador residencial 1cv',         pot:750,  aba:'mot', label:'Motor' },
+  { cat:'Motores — Automação', nome:'Elevador comercial 5cv',           pot:3700, aba:'mot', label:'Motor' },
+  { cat:'Motores — Automação', nome:'Escada rolante (pequena)',         pot:2200, aba:'mot', label:'Motor' },
+
+  // ══════════════════════════════════════
+  // MOTORES — COMPRESSORES / FERRAMENTAS
+  // ══════════════════════════════════════
+  { cat:'Motores — Compressores', nome:'Compressor de ar 1cv',          pot:750,  aba:'mot', label:'Motor' },
+  { cat:'Motores — Compressores', nome:'Compressor de ar 2cv',          pot:1500, aba:'mot', label:'Motor' },
+  { cat:'Motores — Compressores', nome:'Compressor de ar 3cv',          pot:2200, aba:'mot', label:'Motor' },
+  { cat:'Motores — Compressores', nome:'Compressor de ar 5cv',          pot:3700, aba:'mot', label:'Motor' },
+  { cat:'Motores — Compressores', nome:'Compressor frigorífico 1cv',    pot:750,  aba:'mot', label:'Motor' },
+  { cat:'Motores — Compressores', nome:'Câmara frigorífica 2cv',        pot:1500, aba:'mot', label:'Motor' },
+
+  // ══════════════════════════════════════
+  // MOTORES — INDUSTRIA / TRIFÁSICOS
+  // ══════════════════════════════════════
+  { cat:'Motores — Industrial', nome:'Motor trifásico 1cv (750W)',       pot:750,  aba:'mot', label:'Motor' },
+  { cat:'Motores — Industrial', nome:'Motor trifásico 2cv (1500W)',      pot:1500, aba:'mot', label:'Motor' },
+  { cat:'Motores — Industrial', nome:'Motor trifásico 3cv (2200W)',      pot:2200, aba:'mot', label:'Motor' },
+  { cat:'Motores — Industrial', nome:'Motor trifásico 5cv (3700W)',      pot:3700, aba:'mot', label:'Motor' },
+  { cat:'Motores — Industrial', nome:'Motor trifásico 7,5cv (5500W)',    pot:5500, aba:'mot', label:'Motor' },
+  { cat:'Motores — Industrial', nome:'Motor trifásico 10cv (7500W)',     pot:7500, aba:'mot', label:'Motor' },
+  { cat:'Motores — Industrial', nome:'Exaustor de cozinha 200W',         pot:200,  aba:'mot', label:'Motor' },
+  { cat:'Motores — Industrial', nome:'Exaustor industrial 750W',         pot:750,  aba:'mot', label:'Motor' },
+  { cat:'Motores — Industrial', nome:'Ventoinha de teto c/ motor 80W',   pot:80,   aba:'mot', label:'Motor' },
+  { cat:'Motores — Industrial', nome:'Gerador a gasolina 2kW',           pot:2000, aba:'mot', label:'Motor' },
+  { cat:'Motores — Industrial', nome:'Gerador a diesel 5kW',             pot:5000, aba:'mot', label:'Motor' },
+];
+
+function buildRefTable(data) {
+  let html = '';
+  let lastCat = '';
+  data.forEach(item => {
+    if (item.cat !== lastCat) {
+      html += `<div class="ref-category">${item.cat}</div>`;
+      lastCat = item.cat;
+    }
+    html += `<table class="ref-table" style="margin-bottom:0"><tbody>
+      <tr>
+        <td>${item.nome}</td>
+        <td>${item.pot}W</td>
+        <td>${item.cat}</td>
+        <td><button class="btn-usar" onclick="usarRef('${item.aba}','${item.label}',${item.pot},'${item.nome}')">+ Usar</button></td>
+      </tr></tbody></table>`;
+  });
+  return html;
+}
+
+function filtrarRef(q) {
+  const filtered = q.trim() === '' ? REF_DATA : REF_DATA.filter(it => it.nome.toLowerCase().includes(q.toLowerCase()) || it.cat.toLowerCase().includes(q.toLowerCase()));
+  document.getElementById('ref-table-wrap').innerHTML = buildRefTable(filtered);
+}
+
+function usarRef(aba, label, pot, nome) {
+  const id = nextId[aba]++;
+  const pos = items[aba].length + 1;
+  items[aba].push({ id, nome: nome || `${label} ${pos}`, pot });
+  renderList(aba, label);
+  // Mudar para a aba correspondente
+  const tabMap = { ilum:0, tom:1, res:2, mot:3 };
+  const tabBtns = document.querySelectorAll('.tab-btn');
+  const tabContents = document.querySelectorAll('.tab-content');
+  tabBtns.forEach(b => b.classList.remove('active'));
+  tabContents.forEach(t => t.classList.remove('active'));
+  tabBtns[tabMap[aba]].classList.add('active');
+  tabContents[tabMap[aba]].classList.add('active');
+  showToast(`✓ ${nome} adicionado (${pot}W)`);
+}
+
+// Inicializar tabela de referência
+document.getElementById('ref-table-wrap').innerHTML = buildRefTable(REF_DATA);
+
+// ═══════════════════════════════════════════════
+// ELÉTRICA
+// ═══════════════════════════════════════════════
+function selecionarDisjuntor(I) {
+  if (I<=10) return 10; if (I<=16) return 16; if (I<=20) return 20;
+  if (I<=25) return 25; if (I<=32) return 32; if (I<=40) return 40;
+  if (I<=50) return 50; return 63;
+}
+function selecionarCabo(I) {
+  if (I<=10) return 1.5; if (I<=16) return 2.5;
+  if (I<=25) return 4.0; if (I<=32) return 6.0; return 10.0;
+}
+function agrupar(lista, limite, tipo) {
+  const circs = []; let cur = null;
+  lista.forEach(obj => {
+    if (obj.pot <= 0) return;
+    if (!cur || cur.pot + obj.pot > limite) { cur = { pot:0, cargas:[] }; circs.push(cur); }
+    cur.pot += obj.pot;
+    cur.cargas.push({ nome: getNome(tipo, obj), pot: obj.pot });
+  });
+  return circs;
+}
+
+// ═══════════════════════════════════════════════
+// DIMENSIONAR
+// ═══════════════════════════════════════════════
+function dimensionar() {
+  const btn = document.getElementById('btnDim');
+  btn.classList.add('loading');
+  btn.innerHTML = '<span class="spinner"></span>CALCULANDO...';
+  setTimeout(() => { btn.classList.remove('loading'); btn.innerHTML = '⚡ DIMENSIONAR'; calcular(); }, 700);
+}
+
+function calcular() {
+  const V = parseFloat(document.getElementById('tensao').value) || 220;
+  const ilums = items.ilum.filter(it => it.pot > 0);
+  const toms  = items.tom.filter(it => it.pot > 0);
+  const ress  = items.res.filter(it => it.pot > 0);
+  const mots  = items.mot.filter(it => it.pot > 0);
+
+  if (!ilums.length && !toms.length && !ress.length && !mots.length) {
+    showToast('⚠ Adicione pelo menos um elemento'); return;
+  }
+
+  const tI = ilums.reduce((a,b)=>a+b.pot,0);
+  const tT = toms.reduce((a,b)=>a+b.pot,0);
+  const tR = ress.reduce((a,b)=>a+b.pot,0);
+  const tM = mots.reduce((a,b)=>a+b.pot,0);
+
+  const II = tI>0 ? (tI/(V*0.95))*1.10 : 0;
+  const IT = tT>0 ? (tT/(V*0.90))*1.20 : 0;
+  const IR = tR>0 ? tR/V : 0;
+  const IM = tM>0 ? (tM/(V*0.80))*1.30 : 0;
+  const Itotal = II*0.9 + IT*0.6 + IR*0.7 + IM*0.5;
+  const Iref = Math.max(II, IT, IR, IM, 1);
+
+  const gI = agrupar(ilums, 1200, 'ilum');
+  const gT = agrupar(toms,  2200, 'tom');
+  const gR = ress.map(o => ({ pot:o.pot, cargas:[{ nome:getNome('res',o), pot:o.pot }] }));
+  const gM = mots.map(o => ({ pot:o.pot, cargas:[{ nome:getNome('mot',o), pot:o.pot }] }));
+
+  // Guardar cálculo
+  const projNome  = document.getElementById('proj-nome').value.trim() || 'Projeto sem nome';
+  const projLocal = document.getElementById('proj-local').value.trim();
+  const projObs   = document.getElementById('proj-obs').value.trim();
+  window._lastCalc = { V, gI, gT, gR, gM, II, IT, IR, IM, Itotal, projNome, projLocal, projObs };
+
+  // Guardar no histórico
+  salvarHistorico({ nome: projNome, local: projLocal, V, Itotal, data: new Date().toLocaleDateString('pt-MZ'), ts: Date.now(),
+    state: { tensao: V, projNome, projLocal, projObs, items: JSON.parse(JSON.stringify(items)) } });
+
+  // ── RENDER ──
+  const col = document.getElementById('results-col');
+  col.innerHTML = '';
+
+  // PDF Header
+  col.insertAdjacentHTML('beforeend', `
+    <div class="pdf-header">
+      <h1>⚡ ElecDim Pro — Relatório Técnico</h1>
+      <p>${projNome}${projLocal ? ' · ' + projLocal : ''} · Tensão: ${V}V · ${new Date().toLocaleDateString('pt-MZ')}</p>
+    </div>`);
+
+  // Alertas de sobrecarga
+  const alertas = [];
+  [...gI.map((g,i)=>({id:`ILUM-${i+1}`,I:(g.pot/(V*0.95))*1.10,disj:selecionarDisjuntor((g.pot/(V*0.95))*1.10)})),
+   ...gT.map((g,i)=>({id:`TOM-${i+1}`,I:(g.pot/(V*0.90))*1.20,disj:selecionarDisjuntor((g.pot/(V*0.90))*1.20)})),
+   ...gR.map((g,i)=>({id:`RES-${i+1}`,I:g.pot/V,disj:selecionarDisjuntor(g.pot/V)})),
+   ...gM.map((g,i)=>({id:`MOT-${i+1}`,I:(g.pot/(V*0.80))*1.30,disj:selecionarDisjuntor((g.pot/(V*0.80))*1.30)}))
+  ].forEach(c => {
+    const util = (c.I / c.disj) * 100;
+    if (util > 80) alertas.push({ id: c.id, util: util.toFixed(0), tipo: util > 95 ? 'danger' : 'warn' });
+  });
+
+  if (alertas.length) {
+    const ab = document.createElement('div');
+    ab.style.display = 'flex'; ab.style.flexDirection = 'column'; ab.style.gap = '6px';
+    alertas.forEach(a => {
+      ab.insertAdjacentHTML('beforeend', `
+        <div class="alert-box ${a.tipo}">
+          ${a.tipo==='danger'?'🔴':'🟡'} <strong>${a.id}</strong> — Utilização: ${a.util}%
+          ${a.tipo==='danger' ? '— SOBRECARGA CRÍTICA' : '— Próximo do limite'}
+        </div>`);
+    });
+    col.appendChild(ab);
+  }
+
+  // Secções
+  if (gI.length) col.appendChild(buildSection('💡 Iluminação', `${ilums.length} lâmpada(s) · ${tI}W`, gI, 'ILUM', p=>(p/(V*0.95))*1.10, Iref));
+  if (gT.length) col.appendChild(buildSection('🔌 Tomadas',    `${toms.length} tomada(s) · ${tT}W`,   gT, 'TOM',  p=>(p/(V*0.90))*1.20, Iref));
+  if (gR.length) col.appendChild(buildSection('🔥 Resistivos', `${ress.length} aparelho(s) · ${tR}W`, gR, 'RES',  p=>p/V,               Iref, true));
+  if (gM.length) col.appendChild(buildSection('⚙️ Motores',    `${mots.length} motor(es) · ${tM}W`,   gM, 'MOT',  p=>(p/(V*0.80))*1.30, Iref, true));
+
+  // Gráfico
+  if ([II,IT,IR,IM].filter(x=>x>0).length >= 1) col.appendChild(buildChart(II,IT,IR,IM,Itotal));
+
+  // Simultaneidade
+  if ([II,IT,IR,IM].filter(x=>x>0).length >= 2) col.appendChild(buildSimul(II,IT,IR,IM,Itotal));
+
+  // Total
+  col.appendChild(buildTotal(Itotal, V));
+
+  // Notas do projeto no PDF
+  if (projObs) col.insertAdjacentHTML('beforeend', `
+    <div class="card" style="padding:12px 16px;font-size:12px;color:var(--mid)">
+      <strong style="color:var(--hi)">Observações:</strong> ${projObs}
+    </div>`);
+
+  // Botões exportação
+  const er = document.createElement('div');
+  er.className = 'export-row';
+  er.innerHTML = `
+    <button class="export-btn" onclick="exportarTexto()">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Copiar Texto
+    </button>
+    <button class="export-btn pdf" onclick="exportarPDF()">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="15" y2="17"/></svg>
+      Baixar Relatório
+    </button>`;
+  col.appendChild(er);
+
+  col.insertAdjacentHTML('beforeend', `<div class="pdf-footer-print">Elaborado por: Odêncio Hermínio Maculuve | odencmaculuve@gmail.com | WhatsApp: 866408875</div>`);
+
+  // Animar barras e gráfico
+  setTimeout(() => {
+    document.querySelectorAll('.ampere-bar-fill, .chart-fill').forEach(b => { b.style.width = b.dataset.pct + '%'; });
+  }, 120);
+}
+
+// ═══════════════════════════════════════════════
+// BUILD UI
+// ═══════════════════════════════════════════════
+function buildSection(title, meta, grupos, prefix, calcI, Iref, caboMin25=false) {
+  const sec = document.createElement('div');
+  sec.className = 'result-section';
+  const cards = grupos.map((grp, i) => {
+    const I = calcI(grp.pot);
+    const disj = selecionarDisjuntor(I);
+    let cabo = selecionarCabo(I); if (caboMin25 && cabo < 2.5) cabo = 2.5;
+    const pct = Math.min((I/(Iref*1.2))*100,100).toFixed(1);
+    const util = (I/disj)*100;
+    const overload = util > 80;
+    const cargasHtml = grp.cargas.map(c => `
+      <div class="carga-item">
+        <span class="carga-item-nome">${c.nome}</span>
+        <span class="carga-item-pot">${c.pot}W</span>
+      </div>`).join('');
+    return `
+      <div class="circuit-card${overload?' overload':''}">
+        <div class="circuit-card-header">
+          <span class="circuit-id">◈ ${prefix}-${i+1}</span>
+          <span class="circuit-potencia">${grp.pot.toFixed(0)}W · ${grp.cargas.length} carga(s)</span>
+        </div>
+        <div class="circuit-grid">
+          <div class="circuit-stat">
+            <span class="stat-label">Corrente</span>
+            <div class="stat-value hi">${I.toFixed(2)}<span class="su">A</span></div>
+          </div>
+          <div class="circuit-stat">
+            <span class="stat-label">Disjuntor</span>
+            <div class="stat-value bl">${disj}<span class="su">A</span></div>
+          </div>
+          <div class="circuit-stat">
+            <span class="stat-label">Cabo</span>
+            <div class="stat-value">${cabo}<span class="su">mm²</span></div>
+          </div>
+          <div class="circuit-stat">
+            <span class="stat-label">Utilização</span>
+            <div class="stat-value${overload?' danger':''}">${util.toFixed(0)}<span class="su">%</span></div>
+          </div>
+        </div>
+        <div class="carga-list">
+          <div class="carga-list-label">Cargas</div>
+          <div class="carga-items">${cargasHtml}</div>
+        </div>
+        <div class="ampere-bar-wrap">
+          <div class="ampere-bar-label">
+            <span>Carga relativa</span><span>${I.toFixed(2)}A</span>
+          </div>
+          <div class="ampere-bar-track">
+            <div class="ampere-bar-fill${overload?' danger':''}" data-pct="${pct}"></div>
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+  sec.innerHTML = `
+    <div class="result-section-header">
+      <div class="result-section-title">${title}</div>
+      <div class="result-section-meta">${meta}</div>
+    </div>
+    <div class="result-cards">${cards}</div>`;
+  return sec;
+}
+
+function buildChart(II, IT, IR, IM, Itotal) {
+  const grupos = [
+    { nome:'Iluminação', I:II, emoji:'💡' },
+    { nome:'Tomadas',    I:IT, emoji:'🔌' },
+    { nome:'Resistivos', I:IR, emoji:'🔥' },
+    { nome:'Motores',    I:IM, emoji:'⚙️' },
+  ].filter(g => g.I > 0);
+
+  const div = document.createElement('div');
+  div.className = 'chart-block';
+  const rows = grupos.map(g => {
+    const pct = ((g.I / Itotal) * 100).toFixed(1);
+    const barPct = ((g.I / Math.max(...grupos.map(x=>x.I))) * 100).toFixed(1);
+    return `
+      <div class="chart-row">
+        <div class="chart-row-label">
+          <span class="chart-row-name">${g.emoji} ${g.nome}</span>
+          <span class="chart-row-val">${g.I.toFixed(2)}A</span>
+        </div>
+        <div class="chart-track">
+          <div class="chart-fill" data-pct="${barPct}"></div>
+        </div>
+        <div class="chart-pct">${pct}% da corrente total</div>
+      </div>`;
+  }).join('');
+
+  div.innerHTML = `
+    <div class="chart-header">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+      Distribuição por Grupo
+    </div>
+    <div class="chart-body">${rows}</div>`;
+  return div;
+}
+
+function buildSimul(II, IT, IR, IM, Itotal) {
+  const rows = [
+    {label:'Iluminação',I:II,f:0.9},{label:'Tomadas',I:IT,f:0.6},
+    {label:'Resistivos',I:IR,f:0.7},{label:'Motores',I:IM,f:0.5}
+  ].filter(r=>r.I>0);
+  const div = document.createElement('div');
+  div.className = 'simul-block';
+  div.innerHTML = `
+    <div class="simul-header">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+      Simultaneidade
+    </div>
+    <table class="simul-table">
+      <thead><tr><th>Grupo</th><th style="text-align:right">I (A)</th><th style="text-align:center">Fator</th><th style="text-align:right">Contrib.</th></tr></thead>
+      <tbody>
+        ${rows.map(r=>`<tr><td>${r.label}</td><td class="num">${r.I.toFixed(2)}</td><td class="fat">×${r.f}</td><td class="res">${(r.I*r.f).toFixed(2)}</td></tr>`).join('')}
+        <tr style="border-top:1px solid var(--border)"><td style="color:var(--hi);font-weight:600">TOTAL</td><td></td><td></td><td class="res" style="font-size:13px">${Itotal.toFixed(2)}</td></tr>
+      </tbody>
+    </table>`;
+  return div;
+}
+
+function buildTotal(Itotal, V) {
+  const disj = selecionarDisjuntor(Itotal);
+  let cabo = selecionarCabo(Itotal); if (cabo<2.5) cabo=2.5;
+  const div = document.createElement('div');
+  div.className = 'total-block';
+  div.innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+      <div class="total-label">◈ CORRENTE TOTAL</div>
+      <span class="pulse-dot"></span>
+    </div>
+    <div class="total-val">${Itotal.toFixed(2)}<span> A</span></div>
+    <div class="total-grid">
+      <div class="total-stat"><div class="total-stat-label">Disjuntor Geral</div><div class="total-stat-value am">${disj} A</div></div>
+      <div class="total-stat"><div class="total-stat-label">Cabo Principal</div><div class="total-stat-value">${cabo} mm²</div></div>
+      <div class="total-stat"><div class="total-stat-label">Tensão</div><div class="total-stat-value">${V} V</div></div>
+      <div class="total-stat"><div class="total-stat-label">Potência</div><div class="total-stat-value">${(Itotal*V/1000).toFixed(2)} kVA</div></div>
+    </div>`;
+  return div;
+}
+
+// ═══════════════════════════════════════════════
+// HISTÓRICO (localStorage)
+// ═══════════════════════════════════════════════
+function salvarHistorico(entry) {
+  let hist = JSON.parse(localStorage.getItem('elecdim_history') || '[]');
+  // Remove duplicado pelo nome
+  hist = hist.filter(h => h.nome !== entry.nome);
+  hist.unshift(entry);
+  if (hist.length > 10) hist = hist.slice(0, 10);
+  localStorage.setItem('elecdim_history', JSON.stringify(hist));
+  renderHistorico();
+}
+
+function renderHistorico() {
+  const hist = JSON.parse(localStorage.getItem('elecdim_history') || '[]');
+  const list = document.getElementById('history-list');
+  if (!hist.length) {
+    list.innerHTML = '<div class="history-empty">Nenhum projeto guardado ainda.</div>';
+    return;
+  }
+  list.innerHTML = hist.map((h, i) => `
+    <div class="history-item" onclick="carregarProjeto(${i})">
+      <div class="history-info">
+        <div class="history-name">${h.nome}</div>
+        <div class="history-meta">${h.data}${h.local ? ' · ' + h.local : ''} · ${h.V}V</div>
+      </div>
+      <div class="history-corrente">${h.Itotal.toFixed(1)}A</div>
+      <button class="history-del" onclick="event.stopPropagation();deletarProjeto(${i})" title="Apagar">×</button>
+    </div>`).join('');
+}
+
+function carregarProjeto(i) {
+  const hist = JSON.parse(localStorage.getItem('elecdim_history') || '[]');
+  const h = hist[i];
+  if (!h || !h.state) return;
+
+  // Restaurar campos
+  document.getElementById('tensao').value = h.state.tensao || 220;
+  document.querySelectorAll('.tensao-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('proj-nome').value = h.state.projNome || '';
+  document.getElementById('proj-local').value = h.state.projLocal || '';
+  document.getElementById('proj-obs').value = h.state.projObs || '';
+
+  // Restaurar items
+  const src = h.state.items;
+  ['ilum','tom','res','mot'].forEach(tipo => {
+    items[tipo] = src[tipo] ? JSON.parse(JSON.stringify(src[tipo])) : [];
+    const base = { ilum:'Lâmpada', tom:'Tomada', res:'Aparelho', mot:'Motor' };
+    nextId[tipo] = items[tipo].length > 0 ? Math.max(...items[tipo].map(it=>it.id)) + 1 : 1;
+    renderList(tipo, base[tipo]);
+  });
+
+  showToast(`✓ Projeto "${h.nome}" carregado`);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function deletarProjeto(i) {
+  let hist = JSON.parse(localStorage.getItem('elecdim_history') || '[]');
+  hist.splice(i, 1);
+  localStorage.setItem('elecdim_history', JSON.stringify(hist));
+  renderHistorico();
+}
+
+// Inicializar histórico ao carregar
+renderHistorico();
+
+// ═══════════════════════════════════════════════
+// EXPORTAR
+// ═══════════════════════════════════════════════
+function exportarTexto() {
+  const c = window._lastCalc;
+  if (!c) { showToast('⚠ Dimensione primeiro'); return; }
+  const V = c.V, sep = '========================================\n';
+  let txt = sep + '   RELATÓRIO — ELECTRO DIM PRO\n' + sep;
+  txt += `Projeto: ${c.projNome}\n`;
+  if (c.projLocal) txt += `Local: ${c.projLocal}\n`;
+  txt += `Tensão: ${V}V | Data: ${new Date().toLocaleDateString('pt-MZ')}\n\n`;
+
+  function sec(nome, grupos, prefix, calcI, caboMin25=false) {
+    if (!grupos.length) return '';
+    let s = `--- ${nome} ---\n`;
+    grupos.forEach((grp,i) => {
+      const I = calcI(grp.pot);
+      let cabo = selecionarCabo(I); if (caboMin25&&cabo<2.5) cabo=2.5;
+      s += `  ${prefix}-${i+1}: ${grp.pot}W | ${I.toFixed(2)}A | ${selecionarDisjuntor(I)}A | ${cabo}mm²\n`;
+      grp.cargas.forEach(cg => { s += `    ▸ ${cg.nome}: ${cg.pot}W\n`; });
+    });
+    return s + '\n';
+  }
+
+  txt += sec('ILUMINAÇÃO',c.gI,'ILUM',p=>(p/(V*0.95))*1.10);
+  txt += sec('TOMADAS',   c.gT,'TOM', p=>(p/(V*0.90))*1.20);
+  txt += sec('RESISTIVOS',c.gR,'RES', p=>p/V, true);
+  txt += sec('MOTORES',   c.gM,'MOT', p=>(p/(V*0.80))*1.30, true);
+  txt += sep;
+  txt += `CORRENTE TOTAL:  ${c.Itotal.toFixed(2)} A\n`;
+  txt += `DISJUNTOR GERAL: ${selecionarDisjuntor(c.Itotal)} A\n`;
+  txt += sep;
+  if (c.projObs) txt += `\nObservações: ${c.projObs}\n`;
+
+  // Método de cópia compatível com WebIntoApp e browsers sem permissão de clipboard
+  function copiarTexto(t) {
+    // Método 1: clipboard API moderna
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(t)
+        .then(() => showToast('✓ Copiado para a área de transferência'))
+        .catch(() => copiarLegado(t));
+    } else {
+      copiarLegado(t);
+    }
+  }
+
+  function copiarLegado(t) {
+    // Método 2: textarea + execCommand (funciona no WebIntoApp)
+    const ta = document.createElement('textarea');
+    ta.value = t;
+    ta.style.cssText = 'position:fixed;top:0;left:0;opacity:0;pointer-events:none;';
+    document.body.appendChild(ta);
+    ta.focus();
+    ta.select();
+    try {
+      const ok = document.execCommand('copy');
+      showToast(ok ? '✓ Copiado para a área de transferência' : '❌ Não foi possível copiar');
+    } catch(e) {
+      // Método 3: mostrar modal com o texto para o utilizador copiar manualmente
+      mostrarModalCopia(t);
+    }
+    document.body.removeChild(ta);
+  }
+
+  function mostrarModalCopia(t) {
+    // Remove modal anterior se existir
+    const old = document.getElementById('modal-copia');
+    if (old) old.remove();
+
+    const modal = document.createElement('div');
+    modal.id = 'modal-copia';
+    modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px;';
+    modal.innerHTML = `
+      <div style="background:var(--panel);border:1px solid var(--amber);border-radius:10px;width:100%;max-width:480px;overflow:hidden;">
+        <div style="padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;">
+          <span style="font-weight:600;color:var(--hi);">Selecione e copie o texto</span>
+          <button onclick="document.getElementById('modal-copia').remove()" style="background:transparent;border:none;color:var(--mid);font-size:20px;cursor:pointer;line-height:1;">×</button>
+        </div>
+        <textarea id="modal-ta" readonly style="width:100%;height:260px;padding:12px;background:var(--input);border:none;color:var(--hi);font-family:var(--fm);font-size:11px;resize:none;outline:none;"></textarea>
+        <div style="padding:10px 16px;border-top:1px solid var(--border);">
+          <button onclick="document.getElementById('modal-ta').select();document.execCommand('copy');showToast('✓ Copiado!');document.getElementById('modal-copia').remove();"
+            style="width:100%;padding:10px;background:var(--amber);border:none;border-radius:6px;color:#0A0E1A;font-weight:700;font-size:13px;cursor:pointer;">
+            Copiar Tudo
+          </button>
+        </div>
+      </div>`;
+    document.body.appendChild(modal);
+    document.getElementById('modal-ta').value = t;
+    document.getElementById('modal-ta').select();
+  }
+
+  copiarTexto(txt);
+}
+
+// ═══════════════════════════════════════════════
+// GERAR PDF NATIVO (sem dependências externas)
+// ═══════════════════════════════════════════════
+function exportarPDF() {
+  const c = window._lastCalc;
+  if (!c) { showToast('⚠ Dimensione primeiro'); return; }
+  try {
+    gerarPDFNativo(c);
+  } catch(e) {
+    console.error(e);
+    showToast('❌ Erro ao gerar PDF');
+  }
+}
+
+function gerarPDFNativo(c) {
+  const V = c.V;
+  const projNome  = c.projNome  || 'Projeto';
+  const projLocal = c.projLocal || '';
+  const projObs   = c.projObs   || '';
+  const dataHoje  = new Date().toLocaleDateString('pt-MZ');
+
+  // ── Funções eléctricas ──
+  function disj(I) {
+    if(I<=10)return 10;if(I<=16)return 16;if(I<=20)return 20;
+    if(I<=25)return 25;if(I<=32)return 32;if(I<=40)return 40;
+    if(I<=50)return 50;return 63;
+  }
+  function cabo(I,min25=false) {
+    let s;
+    if(I<=10)s=1.5;else if(I<=16)s=2.5;else if(I<=25)s=4;else if(I<=32)s=6;else s=10;
+    return min25&&s<2.5?2.5:s;
+  }
+  function calcI(tipo, pot) {
+    if(tipo==='ILUM')return(pot/(V*0.95))*1.10;
+    if(tipo==='TOM') return(pot/(V*0.90))*1.20;
+    if(tipo==='RES') return pot/V;
+    if(tipo==='MOT') return(pot/(V*0.80))*1.30;
+    return 0;
+  }
+
+  // ── Construir HTML para impressão ──
+  function secao(titulo, grupos, tipo, caboMin25=false) {
+    if(!grupos||!grupos.length) return '';
+    let html = `<div class="pdf-sec">
+      <div class="pdf-sec-title">${titulo}</div>`;
+    grupos.forEach((grp, i) => {
+      const I = calcI(tipo, grp.pot);
+      const d = disj(I);
+      const k = cabo(I, caboMin25);
+      const util = ((I/d)*100).toFixed(0);
+      const overload = parseFloat(util) > 80;
+      html += `<div class="pdf-card${overload?' overload':''}">
+        <div class="pdf-card-head">
+          <span class="pdf-circ-id">${tipo}-${i+1}</span>
+          <span class="pdf-circ-pot">${grp.pot.toFixed(0)} W &nbsp;·&nbsp; ${grp.cargas.length} carga(s)</span>
+        </div>
+        <div class="pdf-grid">
+          <div class="pdf-stat"><div class="pdf-stat-label">Corrente</div><div class="pdf-stat-val amber">${I.toFixed(2)} A</div></div>
+          <div class="pdf-stat"><div class="pdf-stat-label">Disjuntor</div><div class="pdf-stat-val blue">${d} A</div></div>
+          <div class="pdf-stat"><div class="pdf-stat-label">Cabo</div><div class="pdf-stat-val">${k} mm²</div></div>
+          <div class="pdf-stat"><div class="pdf-stat-label">Utilização</div><div class="pdf-stat-val${overload?' red':''}">${util}%</div></div>
+        </div>
+        <div class="pdf-cargas">
+          <div class="pdf-cargas-title">Cargas</div>
+          ${grp.cargas.map(cg=>`<div class="pdf-carga"><span>▸ ${cg.nome}</span><span class="pdf-carga-w">${cg.pot} W</span></div>`).join('')}
+        </div>
+      </div>`;
+    });
+    html += '</div>';
+    return html;
+  }
+
+  // Simultaneidade
+  const simRows = [
+    {l:'Iluminação',I:c.II,f:0.9},{l:'Tomadas',I:c.IT,f:0.6},
+    {l:'Resistivos',I:c.IR,f:0.7},{l:'Motores',I:c.IM,f:0.5}
+  ].filter(r=>r.I>0);
+
+  let simHTML = '';
+  if(simRows.length>=2) {
+    simHTML = `<div class="pdf-sec">
+      <div class="pdf-sec-title">Fatores de Simultaneidade</div>
+      <table class="pdf-table">
+        <thead><tr><th>Grupo</th><th>Corrente (A)</th><th>Fator</th><th>Contrib. (A)</th></tr></thead>
+        <tbody>
+          ${simRows.map(r=>`<tr><td>${r.l}</td><td class="r">${r.I.toFixed(2)}</td><td class="c amber">× ${r.f}</td><td class="r amber">${(r.I*r.f).toFixed(2)}</td></tr>`).join('')}
+          <tr class="total-row"><td><strong>TOTAL</strong></td><td></td><td></td><td class="r amber"><strong>${c.Itotal.toFixed(2)}</strong></td></tr>
+        </tbody>
+      </table>
+    </div>`;
+  }
+
+  // Total geral
+  const dTotal = disj(c.Itotal);
+  const cTotal = cabo(c.Itotal, true);
+  const totalHTML = `
+    <div class="pdf-total">
+      <div class="pdf-total-label">◈ CORRENTE TOTAL DA INSTALAÇÃO</div>
+      <div class="pdf-total-val">${c.Itotal.toFixed(2)} <span>A</span></div>
+      <div class="pdf-total-grid">
+        <div class="pdf-total-stat"><div class="l">Disjuntor Geral</div><div class="v amber">${dTotal} A</div></div>
+        <div class="pdf-total-stat"><div class="l">Cabo Principal</div><div class="v">${cTotal} mm²</div></div>
+        <div class="pdf-total-stat"><div class="l">Tensão Base</div><div class="v">${V} V</div></div>
+        <div class="pdf-total-stat"><div class="l">Potência Aprox.</div><div class="v">${(c.Itotal*V/1000).toFixed(2)} kVA</div></div>
+      </div>
+    </div>`;
+
+  // ── Montar HTML completo para impressão ──
+  const html = `<!DOCTYPE html><html><head><meta charset="UTF-8">
+  <title>ElecDim Pro — ${projNome}</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:Arial,sans-serif;font-size:11px;color:#111;background:#fff;padding:20px;}
+    .pdf-header{background:#070B14;color:#fff;padding:14px 18px;border-radius:6px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;}
+    .pdf-header-left h1{font-size:18px;color:#F59E0B;font-weight:700;}
+    .pdf-header-left p{font-size:9px;color:#94A3B8;margin-top:2px;}
+    .pdf-header-right{text-align:right;font-size:9px;color:#94A3B8;}
+    .pdf-meta{background:#F8FAFC;border:1px solid #CBD5E1;border-radius:4px;padding:10px 14px;margin-bottom:12px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
+    .pdf-meta-item label{font-size:8px;text-transform:uppercase;letter-spacing:0.5px;color:#94A3B8;display:block;margin-bottom:2px;}
+    .pdf-meta-item span{font-size:12px;font-weight:600;color:#0F172A;}
+    .pdf-sec{margin-bottom:14px;}
+    .pdf-sec-title{background:#0F172A;color:#F59E0B;font-size:11px;font-weight:700;padding:7px 12px;border-radius:4px 4px 0 0;letter-spacing:0.5px;}
+    .pdf-card{border:1px solid #CBD5E1;border-left:3px solid #F59E0B;padding:10px 12px;background:#fff;margin-bottom:4px;border-radius:0 0 4px 4px;page-break-inside:avoid;}
+    .pdf-card.overload{border-left-color:#DC2626;border-color:#FCA5A5;}
+    .pdf-card-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+    .pdf-circ-id{font-family:monospace;font-size:11px;color:#F59E0B;font-weight:700;}
+    .pdf-card.overload .pdf-circ-id{color:#DC2626;}
+    .pdf-circ-pot{font-size:9px;color:#94A3B8;}
+    .pdf-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:8px;}
+    .pdf-stat-label{font-size:8px;text-transform:uppercase;letter-spacing:0.5px;color:#94A3B8;margin-bottom:1px;}
+    .pdf-stat-val{font-size:13px;font-weight:700;color:#0F172A;}
+    .pdf-stat-val.amber{color:#D97706;}
+    .pdf-stat-val.blue{color:#2563EB;}
+    .pdf-stat-val.red{color:#DC2626;}
+    .pdf-cargas-title{font-size:8px;text-transform:uppercase;letter-spacing:0.5px;color:#94A3B8;margin-bottom:4px;border-top:1px solid #E2E8F0;padding-top:6px;}
+    .pdf-carga{display:flex;justify-content:space-between;padding:2px 0;font-size:9px;color:#475569;border-bottom:1px solid #F1F5F9;}
+    .pdf-carga-w{font-family:monospace;color:#D97706;}
+    .pdf-table{width:100%;border-collapse:collapse;font-size:10px;}
+    .pdf-table th{background:#F1F5F9;padding:5px 8px;text-align:left;font-size:8px;text-transform:uppercase;border-bottom:1px solid #CBD5E1;}
+    .pdf-table td{padding:5px 8px;border-bottom:1px solid #F1F5F9;}
+    .pdf-table tr.total-row td{background:#FFF8E7;border-top:1px solid #D97706;}
+    .r{text-align:right;} .c{text-align:center;} .amber{color:#D97706;}
+    .pdf-total{background:linear-gradient(135deg,#FFF8E7,#FFFEF0);border:2px solid #F59E0B;border-radius:6px;padding:16px;margin-top:12px;page-break-inside:avoid;}
+    .pdf-total-label{font-size:8px;letter-spacing:2px;color:#92600A;text-transform:uppercase;margin-bottom:4px;}
+    .pdf-total-val{font-size:36px;font-weight:700;color:#D97706;line-height:1;}
+    .pdf-total-val span{font-size:16px;color:#92600A;font-weight:400;}
+    .pdf-total-grid{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;margin-top:12px;}
+    .pdf-total-stat{background:rgba(255,255,255,0.7);border:1px solid #CBD5E1;border-radius:4px;padding:8px;}
+    .pdf-total-stat .l{font-size:8px;text-transform:uppercase;letter-spacing:0.5px;color:#94A3B8;margin-bottom:2px;}
+    .pdf-total-stat .v{font-size:14px;font-weight:700;color:#0F172A;}
+    .pdf-total-stat .v.amber{color:#D97706;}
+    .pdf-obs{background:#F8FAFC;border:1px solid #CBD5E1;border-radius:4px;padding:8px 12px;margin-top:10px;font-size:10px;color:#475569;}
+    .pdf-obs strong{color:#0F172A;}
+    .pdf-footer{margin-top:20px;padding-top:10px;border-top:1px solid #CBD5E1;text-align:center;font-size:8px;color:#94A3B8;}
+    /* Barra fixa de acções */
+    .action-bar{position:fixed;bottom:0;left:0;right:0;background:#070B14;border-top:2px solid #F59E0B;padding:12px 16px;display:flex;gap:10px;z-index:9999;}
+    .action-bar button{flex:1;padding:12px;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;letter-spacing:1px;}
+    .btn-print{background:#F59E0B;color:#0A0E1A;}
+    .btn-share{background:#1E2A3A;color:#F1F5F9;border:1px solid #3B82F6 !important;}
+    .spacer-bottom{height:70px;}
+    @media print{
+      body{padding:10px;}
+      .action-bar{display:none!important;}
+      .spacer-bottom{display:none;}
+    }
+  </style></head><body>
+  <!-- BARRA FIXA DE ACÇÕES -->
+  <div class="action-bar">
+    <button class="btn-print" onclick="window.print()">🖨️ SALVAR COMO PDF</button>
+    <button class="btn-share" onclick="compartilhar()">📤 PARTILHAR</button>
+  </div>
+
+  <div class="pdf-header">
+    <div class="pdf-header-left">
+      <h1>⚡ ElecDim Pro</h1>
+      <p>Dimensionador de Circuitos Elétricos</p>
+    </div>
+    <div class="pdf-header-right">
+      <div style="color:#F59E0B;font-size:11px;font-weight:700;">RELATÓRIO TÉCNICO</div>
+      <div>${dataHoje}</div>
+    </div>
+  </div>
+
+  <div class="pdf-meta">
+    <div class="pdf-meta-item"><label>Projeto</label><span>${projNome}</span></div>
+    <div class="pdf-meta-item"><label>Local / Cliente</label><span>${projLocal||'—'}</span></div>
+    <div class="pdf-meta-item"><label>Tensão</label><span>${V} V</span></div>
+  </div>
+
+  ${secao('💡 ILUMINAÇÃO', c.gI, 'ILUM')}
+  ${secao('🔌 TOMADAS', c.gT, 'TOM')}
+  ${secao('🔥 RESISTIVOS', c.gR, 'RES', true)}
+  ${secao('⚙️ MOTORES', c.gM, 'MOT', true)}
+  ${simHTML}
+  ${totalHTML}
+  ${projObs ? `<div class="pdf-obs"><strong>Observações:</strong> ${projObs}</div>` : ''}
+  <div class="pdf-footer">
+    Elaborado por: Odêncio Hermínio Maculuve &nbsp;|&nbsp; odencmaculuve@gmail.com &nbsp;|&nbsp; WhatsApp: 866408875
+  </div>
+
+  <!-- Espaço para a barra fixa não tapar o conteúdo -->
+  <div class="spacer-bottom"></div>
+
+  <script>
+    function compartilhar() {
+      if (navigator.share) {
+        navigator.share({
+          title: 'ElecDim Pro — Relatório',
+          text: 'Relatório de dimensionamento elétrico gerado pelo ElecDim Pro',
+          url: window.location.href
+        }).catch(() => {});
+      } else {
+        window.print();
+      }
+    }
+  <\/script>
+  </body></html>`;
+
+  // ── Abrir relatório via data: URL ──
+  // Funciona em WebIntoApp com ficheiro local E com URL online
+  const base64 = btoa(unescape(encodeURIComponent(html)));
+  const dataUrl = 'data:text/html;base64,' + base64;
+  const win = window.open(dataUrl, '_blank');
+  if (!win) {
+    // WebIntoApp não abre janelas — mostrar dentro de um iframe modal
+    mostrarRelatorioModal(html);
+  } else {
+    showToast('✓ Relatório aberto! Use Partilhar → Imprimir → Salvar como PDF');
+  }
+}
+
+function mostrarRelatorioModal(html) {
+  // Remove modal anterior se existir
+  const old = document.getElementById('relatorio-modal');
+  if (old) old.remove();
+
+  const modal = document.createElement('div');
+  modal.id = 'relatorio-modal';
+  modal.style.cssText = `
+    position:fixed;inset:0;z-index:99999;background:#000;
+    display:flex;flex-direction:column;
+  `;
+  modal.innerHTML = `
+    <div style="
+      background:#070B14;border-bottom:2px solid #F59E0B;
+      padding:10px 14px;display:flex;align-items:center;
+      justify-content:space-between;flex-shrink:0;
+    ">
+      <span style="color:#F59E0B;font-weight:700;font-size:14px;">⚡ Relatório Técnico</span>
+      <div style="display:flex;gap:8px;">
+        <button onclick="imprimirRelatorio()" style="
+          padding:8px 14px;background:#F59E0B;border:none;
+          border-radius:6px;color:#0A0E1A;font-weight:700;
+          font-size:12px;cursor:pointer;
+        ">🖨️ Salvar PDF</button>
+        <button onclick="document.getElementById('relatorio-modal').remove()" style="
+          padding:8px 12px;background:#1E2A3A;border:1px solid #475569;
+          border-radius:6px;color:#94A3B8;font-size:12px;cursor:pointer;
+        ">✕ Fechar</button>
+      </div>
+    </div>
+    <iframe id="relatorio-iframe" style="flex:1;border:none;background:#fff;width:100%;"></iframe>
+  `;
+  document.body.appendChild(modal);
+
+  // Escrever HTML no iframe
+  const iframe = document.getElementById('relatorio-iframe');
+  iframe.onload = function() {
+    try {
+      iframe.contentDocument.open();
+      iframe.contentDocument.write(html);
+      iframe.contentDocument.close();
+    } catch(e) {}
+  };
+
+  // Tentar via srcdoc primeiro (mais compatível)
+  try {
+    iframe.srcdoc = html;
+  } catch(e) {
+    iframe.onload();
+  }
+
+  showToast('Relatório pronto! Clique em "Salvar PDF"');
+}
+
+function imprimirRelatorio() {
+  const iframe = document.getElementById('relatorio-iframe');
+  if (iframe && iframe.contentWindow) {
+    try {
+      iframe.contentWindow.focus();
+      iframe.contentWindow.print();
+    } catch(e) {
+      window.print();
+    }
+  } else {
+    window.print();
+  }
+}
+
+// ═══════════════════════════════════════════════
+// PWA — REGISTO SERVICE WORKER + INSTALAÇÃO
+// ═══════════════════════════════════════════════
+let deferredPrompt = null;
+
+// Registar Service Worker
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', async () => {
+    // Apagar todos os SW antigos primeiro
+    const regs = await navigator.serviceWorker.getRegistrations();
+    for (const reg of regs) { await reg.unregister(); }
+    // Limpar todos os caches antigos
+    const cacheKeys = await caches.keys();
+    for (const key of cacheKeys) { await caches.delete(key); }
+    // Registar SW novo
+    navigator.serviceWorker.register('sw.js')
+      .then(() => console.log('SW registado'))
+      .catch(e => console.log('SW erro:', e));
+  });
+}
+
+// Capturar evento de instalação
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  deferredPrompt = e;
+  // Mostrar botão de instalação no header
+  document.getElementById('btn-instalar').style.display = 'flex';
+});
+
+// Quando a app é instalada
+window.addEventListener('appinstalled', () => {
+  deferredPrompt = null;
+  document.getElementById('btn-instalar').style.display = 'none';
+  showToast('✓ ElecDim Pro instalado com sucesso!');
+});
+
+function instalarApp() {
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then(choice => {
+      deferredPrompt = null;
+      document.getElementById('btn-instalar').style.display = 'none';
+    });
+  }
+}
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2600);
+}
+</script>
+</body>
+</html>
