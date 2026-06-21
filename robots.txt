@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://maculuve12.github.io/ElecDim-Pro/sitemap.xml
