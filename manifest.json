@@ -2,7 +2,7 @@
   "name": "ElecDim Pro",
   "short_name": "ElecDim Pro",
   "description": "Dimensionador de Circuitos Elétricos",
-  "start_url": "/ElecDim-Pro/dimensionador.html",
+  "start_url": "/ElecDim-Pro/index.html",
   "scope": "/ElecDim-Pro/",
   "display": "standalone",
   "orientation": "portrait",
